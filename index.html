@@ -1,1488 +1,3522 @@
-<!doctype html>
+
+<!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plutonium Servers - Live Game Server Browser</title>
-    <meta name="description" content="Browse live Plutonium game servers for Black Ops II, Modern Warfare 3, World at War and Black Ops. View players, maps, game modes and server information.">
-    <meta name="robots" content="index, follow">
+
+    <title>Plutonium Servers</title>
+
+    <meta name="google-site-verification" content="CBrCLwQWx7B6SsjaUSoG34QsmkRk4fhPTcYjsXTT8KY">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="128x128" href="favicon.png?v=2">
-    <link rel="shortcut icon" type="image/png" href="favicon.png?v=2">
-    <link rel="apple-touch-icon" sizes="128x128" href="favicon.png?v=2">
+    <link rel="icon" type="image/png" href="favicon.png">
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-446Y45EWPD"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0XJM4EP2XP"></script>
+
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
         gtag('js', new Date());
-        gtag('config', 'G-446Y45EWPD');
+
+        gtag('config', 'G-0XJM4EP2XP');
     </script>
 
-    <style>
-        :root {
-            --bg: #0b0d10;
-            --surface: #12151b;
-            --surface-2: #181c24;
-            --surface-hover: #1e232e;
-            --border: #282f3a;
-            --border-soft: #1f2530;
-            --text: #f0f2f5;
-            --muted: #8e96a3;
-            --muted-2: #656d78;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-soft: rgba(59, 130, 246, 0.12);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            --radius: 8px;
-            --radius-lg: 12px;
-            --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+</head>
 
-        body.light-mode {
-            --bg: #f4f6f9;
-            --surface: #ffffff;
-            --surface-2: #f8fafc;
-            --surface-hover: #f1f5f9;
-            --border: #dbe0e6;
-            --border-soft: #e2e8f0;
-            --text: #1e293b;
-            --muted: #64748b;
-            --muted-2: #94a3b8;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --accent-soft: rgba(37, 99, 235, 0.08);
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-        }
+<meta name="description" content="Browse live Plutonium game servers for Black Ops II, Modern Warfare 3, World at War and Black Ops. View players, maps, game modes and server information.">
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+<meta name="robots" content="index, follow">
 
-        html { scroll-behavior: smooth; }
+<style>
 
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-            padding: 20px;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            min-height: 100vh;
-        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f2f2f2;
+    color: #222;
+    margin: 0;
+    padding: 20px;
+}
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
+h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
-        /* Header / Top Bar */
+#top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f2f2f2;
+    margin: -20px -20px 20px -20px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+#top-bar-buttons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#status {
+    margin: 4px 0 0 0;
+    font-size:12px;
+    color:#777;
+}
+
+button {
+    padding: 8px 14px;
+    cursor: pointer;
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 0;
+}
+
+button:hover {
+    background: #e8e8e8;
+}
+
+/* =========================
+   BOTÓN STATUS
+========================= */
+
+.status-button {
+    width: 36px;
+    height: 35px;
+    padding: 0;
+    margin-left: 4px;
+    cursor: pointer;
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    position: relative;
+    top: -1.5px;
+}
+
+.status-button:hover {
+    background: #e8e8e8;
+}
+
+/* ÍCONO TIPO ESTADÍSTICAS */
+
+.status-icon {
+    width: 19px;
+    height: 19px;
+    position: relative;
+    display: block;
+}
+
+.status-icon::before {
+    content: "";
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    top: 9px;
+    height: 1px;
+    background: #777;
+    transform: rotate(-28deg);
+    transform-origin: center;
+}
+
+.status-icon::after {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    left: 2px;
+    top: 10px;
+    border: 1px solid #777;
+    border-radius: 50%;
+    box-sizing: border-box;
+    box-shadow:
+        5px -5px 0 -1px white,
+        5px -5px 0 0 #777,
+        10px -1px 0 -1px white,
+        10px -1px 0 0 #777;
+}
+
+/* =========================
+   BOTONES DE JUEGOS
+========================= */
+
+.game-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 10px 0 18px 0;
+}
+
+.game-button {
+    padding: 6px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    background: white;
+    border: 1px solid #aaa;
+    border-radius: 0;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.game-button strong {
+    display: block;
+    font-size: 12px;
+}
+
+.game-button small {
+    display: block;
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.game-button:hover {
+    background: #e8e8e8;
+}
+
+.game-button.active {
+    background: #dedede;
+    border-color: #777;
+}
+
+/* ========================= */
+
+.search-container {
+    display: flex;
+    gap: 8px;
+    margin: 15px 0 20px 0;
+    flex-wrap: wrap;
+}
+
+.search-container input {
+    padding: 8px 12px;
+    min-width: 280px;
+    border: 1px solid #aaa;
+    font-size: 14px;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: #555;
+}
+
+.game {
+    background: white;
+    border: 1px solid #ccc;
+    margin-bottom: 30px;
+}
+
+.game-title {
+    padding: 15px;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    background: #ffffff;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+    table-layout: fixed;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 9%; }
+th:nth-child(2), td.server-name     { width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+th:nth-child(3), td.players-count   { width: 10%; }
+th:nth-child(4), td:nth-child(4)    { width: 22%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+th:nth-child(5), td:nth-child(5)    { width: 19%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+th {
+    background: #ffffff;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+th:hover {
+    background: #f0f0f0;
+}
+
+td {
+    padding: 11px 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+tr.server-row {
+    cursor: pointer;
+}
+
+tr.server-row:nth-child(odd) {
+    background: #ffffff;
+}
+
+tr.server-row:nth-child(even) {
+    background: #ffffff;
+}
+
+tr.server-row:hover {
+    background: #f4f4f4;
+}
+
+.server-name {
+    font-weight: bold;
+}
+
+.players-count {
+    font-weight:bold;
+    white-space:nowrap;
+    text-align:left;
+}
+.player-box{
+    display:inline-block;
+    min-width:72px;      /* ancho del rectángulo */
+    padding:5px 10px;    /* alto y ancho interno */
+
+    text-align:center;
+
+    border:1px solid;
+    border-radius:0;
+
+    font-weight:bold;
+    font-size:15px;      /* tamaño de los números */
+
+    background:rgba(255,255,255,.05);
+
+    box-sizing:border-box;
+}
+.player-empty{color:#8b8b8b;border-color:rgba(140,140,140,.45);background:rgba(140,140,140,.08);}
+.player-low{color:#d8b64d;border-color:rgba(216,182,77,.55);background:rgba(216,182,77,.08);}
+.player-medium{color:#59d36d;border-color:rgba(89,211,109,.55);background:rgba(89,211,109,.08);}
+.player-full{color:#ff6464;border-color:rgba(255,100,100,.60);background:rgba(255,100,100,.08);}
+
+.country {
+    white-space: nowrap;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.country-flag {
+    width: 32px;
+    height: auto;
+    vertical-align: middle;
+    object-fit: contain;
+}
+
+.details-row {
+    background: #ffffff;
+}
+
+.details {
+    padding: 10px 16px;
+}
+.details p{margin:4px 0;font-size:14px;}
+.details strong{font-weight:bold;}
+
+.details h3 {
+    margin-top: 0;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.sort-arrow {
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+th:nth-child(3) {
+    text-align: left;
+}
+
+.no-results {
+    padding: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    color: #777;
+}
+
+.expand-arrow {
+    display: inline-block;
+    width: 22px;
+    margin-right: 4px;
+    color: #777777;
+    font-size: 17px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.expand-arrow.open {
+    color: #999999;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark-mode {
+    background: #0b0b0b;
+    color: #b0b0b0;
+}
+
+body.dark-mode #top-bar {
+    background: #0b0b0b;
+    border-bottom-color: #1c1c1c;
+}
+
+body.dark-mode button {
+    background: #111111;
+    color: #999999;
+    border-color: #252525;
+}
+
+body.dark-mode button:hover {
+    background: #1a1a1a;
+}
+
+body.dark-mode .status-button {
+    background: #111111;
+    color: #999999;
+    border-color: #252525;
+}
+
+body.dark-mode .status-button:hover {
+    background: #1a1a1a;
+}
+
+body.dark-mode .status-icon::before {
+    background: #999999;
+}
+
+body.dark-mode .status-icon::after {
+    border-color: #999999;
+    box-shadow:
+        5px -5px 0 -1px #111111,
+        5px -5px 0 0 #999999,
+        10px -1px 0 -1px #111111,
+        10px -1px 0 0 #999999;
+}
+
+body.dark-mode .game-button {
+    background: #111111;
+    color: #999999;
+    border-color: #252525;
+}
+
+body.dark-mode .game-button:hover {
+    background: #1a1a1a;
+}
+
+body.dark-mode .game-button small {
+    color: #666666;
+}
+
+body.dark-mode .game-button.active {
+    background: #1c1c1c;
+    border-color: #555555;
+}
+
+body.dark-mode .search-container input {
+    background: #1a1a1a;
+    color: #b0b0b0;
+    border-color: #303030;
+}
+
+body.dark-mode .search-container input::placeholder {
+    color: #777777;
+}
+
+body.dark-mode .search-container input:focus {
+    border-color: #555555;
+    background: #202020;
+}
+
+body.dark-mode .game {
+    background: #0b0b0b;
+    border-color: #1c1c1c;
+}
+
+body.dark-mode .game-title {
+    background: #0b0b0b;
+    border-color: #1c1c1c;
+}
+
+body.dark-mode th {
+    background: #0b0b0b;
+    color: #999999;
+    border-bottom-color: #333333;
+}
+
+body.dark-mode td {
+    border-color: #1b1b1b;
+}
+
+body.dark-mode tr.server-row:nth-child(odd) {
+    background: #0b0b0b;
+}
+
+body.dark-mode tr.server-row:nth-child(even) {
+    background: #0b0b0b;
+}
+
+body.dark-mode tr.server-row:hover {
+    background: #111111;
+}
+
+body.dark-mode .details-row {
+    background: #0b0b0b;
+}
+
+.copy-button {
+    margin-left: 8px;
+    padding: 3px 7px;
+    font-size: 12px;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.08);
+    color: #999999;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.copy-button.copied {
+    color: #8bc34a;
+    border-color: rgba(139, 195, 74, 0.4);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    #status {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    button {
+        padding: 9px 12px;
+        font-size: 14px;
+    }
+
+    #top-bar-buttons button {
+        padding: 0 8px;
+        font-size: 11px;
+        height: 34px;
+        line-height: 1;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .status-button {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        top: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .game-buttons {
+        gap: 5px;
+    }
+
+    .game-button {
+        padding: 5px 8px;
+        font-size: 11px;
+    }
+
+    .game-button strong {
+        font-size: 11px;
+    }
+
+    .game-button small {
+        font-size: 9px;
+    }
+
+    .search-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-container input {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .search-container button {
+        width: 100%;
+    }
+
+    .game {
+        margin-bottom: 20px;
+    }
+
+    .game-title {
+        padding: 12px;
+        font-size: 18px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 650px;
+    }
+
+    th,
+    td {
+        padding: 9px 10px;
+        font-size: 13px;
+    }
+
+    .country {
+        font-size: 22px;
+    }
+
+    .details {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .details h3 {
+        font-size: 17px;
+    }
+
+    .no-results {
+        padding: 15px;
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+        width: 12%;
+        padding-right: 6px;
+    }
+
+    th:nth-child(2) {
+        width: 37%;
+        padding-left: 6px;
+    }
+
+    td.server-name {
+        width: 37%;
+        padding-left: 0px;
+    }
+
+    th:nth-child(3), td.players-count {
+        width: 14%;
+        padding-left: 8px;
+    }
+
+    th:nth-child(4), td:nth-child(4) {
+        width: 21%;
+    }
+
+    th:nth-child(5), td:nth-child(5) {
+        width: 16%;
+    }
+
+}
+
+</style>
+
+<!-- Apariencia copiada de index1; la lógica y el contenido de index2 permanecen intactos. -->
+<style>
+
+    :root {
+        --bg: #0b0d10;
+        --surface: #111419;
+        --surface-2: #151922;
+        --surface-hover: #1a1f29;
+        --border: #292f39;
+        --border-soft: #20252d;
+        --text: #e7e9ed;
+        --muted: #8c939e;
+        --muted-2: #686f7a;
+        --accent: #d9dde5;
+        --shadow: 0 8px 24px rgba(0,0,0,.18);
+        --radius: 7px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f1f3f5;
+        color: #25282d;
+        margin: 0;
+        padding: 20px;
+        line-height: 1.4;
+    }
+
+    h1 {
+        margin: 0;
+        margin-bottom: 1px;
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: -.35px;
+    }
+
+    #top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(241,243,245,.96);
+        margin: -20px -20px 20px -20px;
+        padding: 13px 20px;
+        border-bottom: 1px solid #d5d9de;
+        box-shadow: 0 4px 14px rgba(0,0,0,.06);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    #top-bar-buttons {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    #status {
+        margin: 2px 0 0 0;
+        font-size: 12px;
+        color: #747b84;
+        line-height: 1.35;
+    }
+
+    button {
+        padding: 8px 14px;
+        cursor: pointer;
+        background: #fff;
+        color: #33373d;
+        border: 1px solid #cbd0d6;
+        border-radius: 6px;
+        transition: background .15s ease, border-color .15s ease, transform .12s ease, box-shadow .15s ease;
+    }
+
+    button:hover {
+        background: #f7f8f9;
+        border-color: #aeb5bd;
+        box-shadow: 0 2px 7px rgba(0,0,0,.07);
+    }
+
+    button:active { transform: translateY(1px); }
+
+    .status-button {
+        width: 36px;
+        height: 35px;
+        padding: 0;
+        margin-left: 2px;
+        cursor: pointer;
+        background: #fff;
+        border: 1px solid #cbd0d6;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        position: relative;
+        top: 0;
+    }
+
+    .status-button:hover { background: #f7f8f9; }
+
+    .status-icon {
+        width: 19px;
+        height: 19px;
+        position: relative;
+        display: block;
+    }
+
+    .status-icon::before {
+        content: "";
+        position: absolute;
+        left: 1px;
+        right: 1px;
+        top: 9px;
+        height: 1px;
+        background: #777;
+        transform: rotate(-28deg);
+        transform-origin: center;
+    }
+
+    .status-icon::after {
+        content: "";
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        left: 2px;
+        top: 10px;
+        border: 1px solid #777;
+        border-radius: 50%;
+        box-sizing: border-box;
+        box-shadow:
+            5px -5px 0 -1px white,
+            5px -5px 0 0 #777,
+            10px -1px 0 -1px white,
+            10px -1px 0 0 #777;
+    }
+
+    .game-buttons {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        margin: 10px 0 18px 0;
+    }
+
+    .game-button {
+        padding: 7px 11px;
+        font-size: 12px;
+        line-height: 1.2;
+        background: #fff;
+        color: #33373d;
+        border: 1px solid #cbd0d6;
+        border-radius: 6px;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .game-button strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .game-button small {
+        display: block;
+        font-size: 10px;
+        color: #777e87;
+        margin-top: 2px;
+    }
+
+    .game-button:hover { background: #f7f8f9; }
+
+    .game-button.active {
+        background: #e7eaee;
+        border-color: #8f97a1;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,.03);
+    }
+
+    .search-container {
+        display: flex;
+        gap: 8px;
+        margin: 15px 0 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .search-container input {
+        padding: 9px 12px;
+        min-width: 280px;
+        border: 1px solid #cbd0d6;
+        border-radius: 6px;
+        background: #fff;
+        color: #25282d;
+        font-size: 14px;
+        outline: none;
+        transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .search-container input:focus {
+        border-color: #8d96a1;
+        box-shadow: 0 0 0 3px rgba(100,110,125,.10);
+    }
+
+    .game {
+        background: #fff;
+        border: 1px solid #d3d7dc;
+        border-radius: 7px;
+        margin-bottom: 22px;
+        overflow: hidden;
+        box-shadow: 0 4px 14px rgba(0,0,0,.045);
+    }
+
+    .game-title {
+        padding: 13px 15px;
+        margin: 0;
+        border-bottom: 1px solid #d9dde2;
+        background: #f8f9fa;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 700px;
+        table-layout: fixed;
+    }
+
+    th:nth-child(1), td:nth-child(1) { width: 9%; }
+    th:nth-child(2), td.server-name { width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    th:nth-child(3), td.players-count { width: 10%; }
+    th:nth-child(4), td:nth-child(4) { width: 22%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    th:nth-child(5), td:nth-child(5) { width: 19%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    th {
+        background: #f8f9fa;
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e3e7;
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+        color: #6d747d;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .25px;
+    }
+
+    th:hover { background: #f0f2f4; }
+
+    td {
+        padding: 11px 12px;
+        border-bottom: 1px solid #eceef1;
+        font-size: 13px;
+    }
+
+    tr.server-row {
+        cursor: pointer;
+        transition: background .12s ease;
+    }
+
+    tr.server-row:nth-child(odd),
+    tr.server-row:nth-child(even) { background: #fff; }
+
+    tr.server-row:hover { background: #f5f7f8; }
+
+    .server-name {
+        font-weight: 700;
+        color: #30343a;
+    }
+
+    .players-count {
+        font-weight: bold;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .player-box {
+        display: inline-block;
+        min-width: 72px;
+        padding: 5px 10px;
+        text-align: center;
+        border: 1px solid;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 14px;
+        background: rgba(255,255,255,.05);
+        box-sizing: border-box;
+    }
+
+    .player-empty { color:#777f88; border-color:rgba(120,128,138,.35); background:rgba(120,128,138,.06); }
+    .player-low { color:#a17e16; border-color:rgba(161,126,22,.42); background:rgba(161,126,22,.07); }
+    .player-medium { color:#2d9942; border-color:rgba(45,153,66,.42); background:rgba(45,153,66,.07); }
+    .player-full { color:#d34b4b; border-color:rgba(211,75,75,.45); background:rgba(211,75,75,.07); }
+
+    .country {
+        white-space: nowrap;
+        font-size: 24px;
+        line-height: 1;
+    }
+
+    .country-flag {
+        width: 32px;
+        height: auto;
+        vertical-align: middle;
+        object-fit: contain;
+    }
+
+    .details-row { background: #f8f9fa; }
+
+    .details {
+        padding: 11px 16px;
+        border-left: 3px solid #c7ccd2;
+    }
+
+    .details p { margin: 5px 0; font-size: 13px; }
+    .details strong { font-weight: 700; color: #555c65; }
+
+    .details h3 { margin-top: 0; }
+
+    .error { color: #d33; font-weight: bold; }
+
+    .sort-arrow {
+        font-size: 10px;
+        margin-left: 5px;
+    }
+
+    th:nth-child(3) { text-align: left; }
+
+    .no-results {
+        padding: 20px;
+        background: #fff;
+        border: 1px solid #d3d7dc;
+        border-radius: 7px;
+        color: #777e87;
+    }
+
+    .expand-arrow {
+        display: inline-block;
+        width: 22px;
+        margin-right: 4px;
+        color: #8a919a;
+        font-size: 17px;
+        font-weight: normal;
+        text-align: center;
+    }
+
+    .expand-arrow.open { color: #555d67; }
+
+    .copy-button {
+        margin-left: 8px;
+        padding: 3px 7px;
+        font-size: 12px;
+        border-radius: 5px;
+        background: rgba(100,110,120,.07);
+        color: #707780;
+        border: 1px solid rgba(100,110,120,.20);
+        cursor: pointer;
+    }
+
+    .copy-button:hover { background: rgba(100,110,120,.13); }
+
+    .copy-button.copied {
+        color: #4b9c5c;
+        border-color: rgba(75,156,92,.35);
+    }
+
+    /* =========================
+       DARK MODE
+    ========================= */
+
+    body.dark-mode {
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    body.dark-mode #top-bar {
+        background: rgba(11,13,16,.94);
+        border-bottom-color: var(--border);
+        box-shadow: 0 5px 18px rgba(0,0,0,.28);
+    }
+
+    body.dark-mode button {
+        background: var(--surface);
+        color: #c7ccd3;
+        border-color: var(--border);
+    }
+
+    body.dark-mode button:hover {
+        background: var(--surface-hover);
+        border-color: #3a424d;
+        box-shadow: 0 3px 10px rgba(0,0,0,.22);
+    }
+
+    body.dark-mode .status-button {
+        background: var(--surface);
+        color: #c7ccd3;
+        border-color: var(--border);
+    }
+
+    body.dark-mode .status-button:hover { background: var(--surface-hover); }
+
+    body.dark-mode .status-icon::before { background: #8f96a0; }
+
+    body.dark-mode .status-icon::after {
+        border-color: #8f96a0;
+        box-shadow:
+            5px -5px 0 -1px var(--surface),
+            5px -5px 0 0 #8f96a0,
+            10px -1px 0 -1px var(--surface),
+            10px -1px 0 0 #8f96a0;
+    }
+
+    body.dark-mode .game-button {
+        background: var(--surface);
+        color: #c7ccd3;
+        border-color: var(--border);
+    }
+
+    body.dark-mode .game-button:hover { background: var(--surface-hover); }
+
+    body.dark-mode .game-button small { color: #747b86; }
+
+    body.dark-mode .game-button.active {
+        background: #1b2028;
+        border-color: #515a66;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.025);
+    }
+
+    body.dark-mode .search-container input {
+        background: var(--surface);
+        color: #d4d8de;
+        border-color: var(--border);
+    }
+
+    body.dark-mode .search-container input::placeholder { color: #69717c; }
+
+    body.dark-mode .search-container input:focus {
+        border-color: #59636f;
+        background: #171b22;
+        box-shadow: 0 0 0 3px rgba(150,160,175,.07);
+    }
+
+    body.dark-mode .game {
+        background: var(--surface);
+        border-color: var(--border);
+        box-shadow: var(--shadow);
+    }
+
+    body.dark-mode .game-title {
+        background: #0f1217;
+        border-color: var(--border);
+        color: #e1e4e9;
+    }
+
+    body.dark-mode th {
+        background: #0f1217;
+        color: #858d98;
+        border-bottom-color: var(--border);
+    }
+
+    body.dark-mode th:hover { background: #151920; }
+
+    body.dark-mode td { border-color: var(--border-soft); }
+
+    body.dark-mode tr.server-row:nth-child(odd),
+    body.dark-mode tr.server-row:nth-child(even) { background: var(--surface); }
+
+    body.dark-mode tr.server-row:hover { background: var(--surface-hover); }
+
+    body.dark-mode .server-name { color: #e0e3e8; }
+
+    body.dark-mode .details-row { background: #0f1217; }
+
+    body.dark-mode .details { border-left-color: #3c444f; }
+
+    body.dark-mode .details strong { color: #aeb5be; }
+
+    body.dark-mode .no-results {
+        background: var(--surface);
+        border-color: var(--border);
+        color: #777f8a;
+    }
+
+    body.dark-mode .copy-button {
+        background: rgba(255,255,255,.045);
+        color: #929aa5;
+        border-color: rgba(255,255,255,.12);
+    }
+
+    body.dark-mode .copy-button:hover { background: rgba(255,255,255,.09); }
+
+    body.dark-mode .player-empty { color:#858d98; border-color:rgba(133,141,152,.32); background:rgba(133,141,152,.05); }
+    body.dark-mode .player-low { color:#c8a93c; border-color:rgba(200,169,60,.43); background:rgba(200,169,60,.06); }
+    body.dark-mode .player-medium { color:#57c96b; border-color:rgba(87,201,107,.43); background:rgba(87,201,107,.06); }
+    body.dark-mode .player-full { color:#f06a6a; border-color:rgba(240,106,106,.48); background:rgba(240,106,106,.06); }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 600px) {
+        body { padding: 10px; }
+
+        h1 { font-size: 22px; }
+
         #top-bar {
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(11, 13, 16, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            margin: -20px -20px 20px -20px;
-            padding: 14px 24px;
-            border-bottom: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            transition: background 0.2s ease;
-        }
-
-        body.light-mode #top-bar {
-            background: rgba(244, 246, 249, 0.88);
-        }
-
-        .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-title {
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, var(--text) 30%, var(--muted) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .live-dot {
-            width: 9px;
-            height: 9px;
-            background-color: #22c55e;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px #22c55e;
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+            margin: -10px -10px 15px -10px;
+            padding: 11px 10px;
         }
 
         #status {
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        #top-bar-buttons { gap: 5px; }
+
+        button {
+            padding: 8px 11px;
             font-size: 13px;
-            color: var(--muted);
-            margin-top: 2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
         }
 
-        .status-badge {
-            background: var(--surface-2);
-            padding: 2px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        #top-bar-buttons {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .icon-button {
-            width: 38px;
-            height: 38px;
-            padding: 0;
-            cursor: pointer;
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
+        #top-bar-buttons button {
+            padding: 0 8px;
+            font-size: 11px;
+            height: 34px;
+            line-height: 1;
+            white-space: nowrap;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.15s ease;
-            font-size: 16px;
+            box-sizing: border-box;
         }
 
-        .icon-button:hover {
-            background: var(--surface-hover);
-            border-color: var(--muted-2);
-            transform: translateY(-1px);
+        .status-button {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            top: 0;
         }
 
-        .icon-button:active {
-            transform: translateY(0);
-        }
-
-        .refresh-icon {
-            display: inline-block;
-            transition: transform 0.5s ease;
-        }
-
-        .refresh-button.is-loading .refresh-icon {
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Stats Header Banner */
-        .stats-banner {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            box-shadow: var(--shadow);
-            transition: border-color 0.2s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--muted-2);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--muted);
-            font-weight: 600;
-        }
-
-        .stat-value {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text);
-        }
-
-        /* Game Tabs */
-        .game-buttons {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 6px;
-            margin-bottom: 20px;
-            scrollbar-width: thin;
-        }
+        .game-buttons { gap: 5px; }
 
         .game-button {
-            padding: 10px 16px;
-            font-size: 13px;
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            cursor: pointer;
-            text-align: left;
-            white-space: nowrap;
-            transition: all 0.15s ease;
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .game-button strong {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text);
-        }
-
-        .game-button small {
+            padding: 6px 8px;
             font-size: 11px;
-            color: var(--muted);
+            border-radius: 6px;
         }
 
-        .game-button:hover {
-            background: var(--surface-hover);
-            border-color: var(--muted-2);
-        }
+        .game-button strong { font-size: 11px; }
+        .game-button small { font-size: 9px; }
 
-        .game-button.active {
-            background: var(--accent-soft);
-            border-color: var(--accent);
-            box-shadow: 0 0 12px var(--accent-soft);
-        }
-
-        .game-button.active strong {
-            color: var(--accent);
-        }
-
-        /* Search & Filters */
         .search-container {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-input-wrapper {
-            position: relative;
-            flex: 1 1 300px;
+            flex-direction: column;
+            gap: 7px;
         }
 
         .search-container input {
             width: 100%;
-            padding: 10px 14px 10px 38px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            background: var(--surface);
-            color: var(--text);
-            font-size: 14px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--muted);
-            pointer-events: none;
-            font-size: 14px;
-        }
+        .search-container button { width: 100%; }
 
-        .search-container input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-soft);
-        }
-
-        .btn {
-            padding: 10px 18px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text);
-            transition: all 0.15s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn:hover {
-            background: var(--surface-hover);
-            border-color: var(--muted-2);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            border-color: var(--accent);
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .filter-chip {
-            padding: 8px 14px;
-            font-size: 13px;
-            border-radius: 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            cursor: pointer;
-            transition: all 0.15s ease;
-            user-select: none;
-        }
-
-        .filter-chip.active {
-            background: var(--accent-soft);
-            border-color: var(--accent);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Server Table Container */
-        #servers {
-            position: relative;
-            min-height: 200px;
-        }
-
-        .game-section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 24px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
+        .game { margin-bottom: 17px; }
 
         .game-title {
-            padding: 16px 20px;
-            background: var(--surface-2);
-            border-bottom: 1px solid var(--border);
-            font-size: 18px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .game-title-meta {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--muted);
+            padding: 11px 12px;
+            font-size: 17px;
         }
 
         .table-container {
-            width: 100%;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            min-width: 720px;
-            table-layout: fixed;
-        }
+        table { min-width: 650px; }
 
-        th {
-            background: var(--surface-2);
-            padding: 12px 14px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            user-select: none;
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: background-color 0.15s ease, color 0.15s ease;
-        }
-
-        th:hover {
-            background: var(--surface-hover);
-            color: var(--text);
-        }
-
-        th.active-sort {
-            color: var(--accent);
-        }
-
-        th.country-column { width: 8%; text-align: center; }
-        th.server-column { width: 38%; }
-        th.players-column { width: 12%; text-align: left; }
-        th.game-column { width: 12%; }
-        th.map-column { width: 18%; }
-        th.mode-column { width: 12%; }
-
-        td {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border-soft);
-            font-size: 14px;
-            vertical-align: middle;
-        }
-
-        tr.server-row {
-            cursor: pointer;
-            transition: background-color 0.12s ease;
-        }
-
-        tr.server-row:hover {
-            background: var(--surface-hover);
-        }
-
-        .country {
-            text-align: center;
-        }
-
-        .country-flag {
-            width: 28px;
-            height: 20px;
-            border-radius: 3px;
-            object-fit: cover;
-            vertical-align: middle;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-        }
-
-        .server-name {
-            font-weight: 600;
-            color: var(--text);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .expand-arrow {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            color: var(--muted);
-            font-size: 12px;
-            transition: transform 0.2s ease, color 0.2s ease;
-        }
-
-        .expand-arrow.open {
-            transform: rotate(180deg);
-            color: var(--accent);
-        }
-
-        .player-box {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 68px;
-            padding: 4px 10px;
-            border: 1px solid;
-            border-radius: 6px;
-            font-weight: 700;
+        th, td {
+            padding: 9px 10px;
             font-size: 13px;
-            letter-spacing: 0.3px;
         }
 
-        .player-empty {
-            color: var(--muted);
-            border-color: rgba(142, 150, 163, 0.25);
-            background: rgba(142, 150, 163, 0.05);
-        }
+        .country { font-size: 22px; }
 
-        .player-low {
-            color: #eab308;
-            border-color: rgba(234, 179, 8, 0.35);
-            background: rgba(234, 179, 8, 0.08);
-        }
-
-        .player-medium {
-            color: #22c55e;
-            border-color: rgba(34, 197, 94, 0.35);
-            background: rgba(34, 197, 94, 0.08);
-        }
-
-        .player-full {
-            color: #ef4444;
-            border-color: rgba(239, 68, 68, 0.35);
-            background: rgba(239, 68, 68, 0.08);
-        }
-
-        .game-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--muted);
-        }
-
-        .map-cell, .mode-cell {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: var(--muted);
-        }
-
-        /* Expanded Details Row */
-        .details-row {
-            background: var(--surface-2);
-        }
-
-        .details-card {
-            padding: 16px 20px;
-            border-left: 4px solid var(--accent);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-        }
-
-        .detail-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .detail-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--muted);
-            font-weight: 700;
-        }
-
-        .detail-value {
+        .details {
+            padding: 11px 13px;
             font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            word-break: break-all;
         }
 
-        .copy-btn {
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 4px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.15s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .copy-btn:hover {
-            background: var(--surface-hover);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .copy-btn.copied {
-            background: rgba(34, 197, 94, 0.15);
-            border-color: #22c55e;
-            color: #22c55e;
-        }
-
-        .code-box {
-            background: var(--bg);
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            font-family: monospace;
-            font-size: 13px;
-            color: #38bdf8;
-            word-break: break-all;
-        }
+        .details h3 { font-size: 17px; }
 
         .no-results {
-            padding: 40px;
-            text-align: center;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            color: var(--muted);
-            font-size: 15px;
+            padding: 15px;
+            border-radius: 6px;
         }
 
-        .servers-loading {
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            color: var(--muted);
-            font-size: 14px;
+        th:nth-child(1), td:nth-child(1) {
+            width: 12%;
+            padding-right: 6px;
         }
 
-        .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        th:nth-child(2) {
+            width: 37%;
+            padding-left: 6px;
         }
 
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            #top-bar { margin: -12px -12px 16px -12px; padding: 10px 14px; }
-            .brand-title { font-size: 18px; }
-            .stats-banner { grid-template-columns: 1fr 1fr; }
-            .stat-value { font-size: 18px; }
-            th.country-column { width: 12%; }
-            th.server-column { width: 48%; }
-            th.players-column { width: 20%; }
-            th.game-column, th.map-column, th.mode-column { display: none; }
-            td.game-name, td.map-cell, td.mode-cell { display: none; }
+        td.server-name {
+            width: 37%;
+            padding-left: 0;
         }
-    </style>
+
+        th:nth-child(3), td.players-count {
+            width: 14%;
+            padding-left: 8px;
+        }
+
+        th:nth-child(4), td:nth-child(4) { width: 21%; }
+        th:nth-child(5), td:nth-child(5) { width: 16%; }
+    }
+
+</style>
+
 </head>
-<body class="dark-mode">
 
-<div class="container">
+<body>
 
-    <!-- Sticky Header -->
-    <header id="top-bar">
-        <div class="brand-container">
-            <div>
-                <h1 class="brand-title">
-                    <span class="live-dot" title="Live Server Feed"></span>
-                    Plutonium Servers
-                </h1>
-                <p id="status">
-                    <span>Loading live server list...</span>
-                </p>
-            </div>
-        </div>
+<div id="top-bar">
 
-        <div id="top-bar-buttons">
-            <button onclick="openStatusPage()" class="icon-button" title="Plutonium Status" aria-label="Plutonium Status">
-                ⚡
-            </button>
-            <button onclick="toggleDarkMode()" id="darkModeButton" class="icon-button" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
-                ☀️
-            </button>
-            <button onclick="loadServers()" class="icon-button refresh-button" id="refreshButton" title="Refresh Servers" aria-label="Refresh Servers">
-                <span class="refresh-icon">↻</span>
-            </button>
-            <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="icon-button" title="Scroll to Top" aria-label="Scroll to Top">
-                ↑
-            </button>
-        </div>
-    </header>
+    <div><h1>Plutonium Servers</h1>
+    <p id="status">Loading servers...</p></div>
 
-    <!-- Overall Statistics Header -->
-    <section class="stats-banner" id="statsBanner">
-        <div class="stat-card">
-            <span class="stat-label">Total Servers</span>
-            <span class="stat-value" id="statTotalServers">—</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Players Online</span>
-            <span class="stat-value" id="statTotalPlayers">—</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Most Active Game</span>
-            <span class="stat-value" id="statTopGame">—</span>
-        </div>
-        <div class="stat-card">
-            <span class="stat-label">Last Updated</span>
-            <span class="stat-value" id="statLastUpdated" style="font-size: 16px;">—</span>
-        </div>
-    </section>
+    <div id="top-bar-buttons">
 
-    <!-- Game Selector Tabs -->
-    <nav id="gameButtons" class="game-buttons" aria-label="Game Filter Tabs">
-        <!-- Rendered dynamically -->
-    </nav>
+        <button
+        onclick="openStatusPage()"
+        class="status-button"
+        title="Plutonium Status"
+        aria-label="Plutonium Status"
+        >
+            <span class="status-icon"></span>
+        </button>
 
-    <!-- Search & Filters -->
-    <section class="search-container">
-        <div class="search-input-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="Search server name, map, mode, country..." oninput="handleSearchInput(event)" onkeydown="handleSearchKey(event)">
-        </div>
+        <button onclick="toggleDarkMode()" id="darkModeButton">
+            🌙
+        </button>
 
-        <button onclick="searchServers()" class="btn btn-primary">Search</button>
-        <button onclick="clearSearch()" class="btn">Clear</button>
+        <button onclick="loadServers()">
+            Refresh
+        </button>
 
-        <div class="filter-chip" id="filterHasPlayers" onclick="toggleFilterHasPlayers()">
-            🔥 Has Players
-        </div>
-        <div class="filter-chip" id="filterZombies" onclick="toggleFilterZombies()">
-            🧟 Zombies Only
-        </div>
-    </section>
+        <button onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Scroll to top">
+            ↑ Top
+        </button>
 
-    <!-- Server List Container -->
-    <main id="servers">
-        <div class="servers-loading">
-            <div class="spinner"></div>
-            <span>Fetching live Plutonium server feeds...</span>
-        </div>
-    </main>
+    </div>
 
 </div>
+
+<!-- BOTONES DE JUEGOS -->
+
+<div id="gameButtons" class="game-buttons"></div>
+
+<!-- BUSCADOR -->
+
+<div class="search-container">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search server, IP, map, country..."
+onkeydown="handleSearchKey(event)"
+
+>
+
+<button onclick="searchServers()">
+    Search
+</button>
+
+<button onclick="clearSearch()">
+    Clear
+</button>
+
+</div>
+
+
+
+<div id="servers"></div>
 
 <script>
 
 const API_URLS = [
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=T6&limit=500",
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=T6ZM&limit=500",
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=IW5&limit=500",
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=T4&limit=500",
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=T4ZM&limit=500",
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=T5&limit=500",
+
     "https://gameserve.rs/api/v1/servers?platform=plutonium&game=T5ZM&limit=500"
+
 ];
 
-const GAME_NAMES = {
-    "T6": "BO2 MP",
-    "T6ZM": "BO2 ZM",
-    "IW5": "MW3 MP",
-    "T5": "BO1 MP",
-    "T5ZM": "BO1 ZM",
-    "T4": "WaW MP",
-    "T4ZM": "WaW ZM"
-};
+let allServers = [];
 
-const GAME_FULL_NAMES = {
-    "T6": "Black Ops II",
-    "T6ZM": "Black Ops II Zombies",
-    "IW5": "Modern Warfare 3",
-    "T5": "Black Ops",
-    "T5ZM": "Black Ops Zombies",
-    "T4": "World at War",
-    "T4ZM": "World at War Zombies"
-};
+let currentSort = "players";
+
+let sortDescending = true;
+
+let expandedServerId = null;
 
 const GAME_PATHS = {
-    "T6": "/BO2-MP",
-    "T6ZM": "/BO2-ZM",
-    "IW5": "/MW3-MP",
-    "T5": "/BO1-MP",
-    "T5ZM": "/BO1-ZM",
-    "T4": "/WaW-MP",
-    "T4ZM": "/WaW-ZM"
+    "T6": "BO2-MP",
+    "T6ZM": "BO2-ZM",
+    "IW5": "MW3-MP",
+    "T5": "BO1-MP",
+    "T5ZM": "BO1-ZM",
+    "T4": "WaW-MP",
+    "T4ZM": "WaW-ZM"
 };
 
-let allServers = [];
-let currentSort = "players";
-let sortDescending = true;
-let expandedServerId = null;
-let selectedGame = "ALL";
-let searchQuery = "";
-let filterHasPlayersOnly = false;
-let filterZombiesOnly = false;
-let activeLoadRequest = 0;
-let lastUpdatedTime = null;
-let debounceTimer = null;
+const GAME_IDS_BY_PATH = Object.fromEntries(
+    Object.entries(GAME_PATHS).map(
+        ([gameId, path]) => [
+            path.toLowerCase(),
+            gameId
+        ]
+    )
+);
 
-/* Initial load configuration */
-window.addEventListener("DOMContentLoaded", () => {
-    initDarkMode();
-    readUrlParameters();
-    loadServers();
-    setInterval(loadServers, 30000);
-});
+function getGameFromCurrentUrl() {
+    const path =
+        window.location.hash
+            .replace(/^#\/?/, "")
+            .replace(/\/+$/, "")
+            .toLowerCase();
 
-function readUrlParameters() {
-    const urlParams = new URLSearchParams(window.location.search);
-    searchQuery = (urlParams.get("q") || "").trim().toLowerCase();
-    const input = document.getElementById("searchInput");
-    if (input) input.value = searchQuery;
-    selectedGame = getGameFromCurrentUrl();
+    return GAME_IDS_BY_PATH[path] || "ALL";
 }
+
+let selectedGame = getGameFromCurrentUrl();
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+let searchQuery =
+    (
+        urlParams.get("q") || ""
+    )
+        .trim()
+        .toLowerCase();
+
+window.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const input =
+            document.getElementById(
+                "searchInput"
+            );
+
+        if (input) {
+
+            input.value =
+                searchQuery;
+
+        }
+
+    }
+);
+
+/* =========================
+   BOTÓN STATUS
+========================= */
 
 function openStatusPage() {
-    window.open("https://status.plutonium.pw/", "_blank");
+
+    window.open(
+        "https://status.plutonium.pw/",
+        "_blank"
+    );
+
 }
 
-/* API Fetching */
+/* =========================
+   CARGAR SERVIDORES
+========================= */
+
 async function loadServers() {
-    const requestId = ++activeLoadRequest;
-    startRefreshAnimation();
 
-    const serversContainer = document.getElementById("servers");
-    if (allServers.length === 0 && serversContainer) {
-        serversContainer.innerHTML = `
-            <div class="servers-loading">
-                <div class="spinner"></div>
-                <span>Fetching live Plutonium server feeds...</span>
-            </div>
-        `;
-    }
-
-    try {
-        const responseResults = await Promise.allSettled(
-            API_URLS.map(url => fetch(url))
+    const status =
+        document.getElementById(
+            "status"
         );
 
-        const responses = responseResults
-            .filter(res => res.status === "fulfilled" && res.value.ok)
-            .map(res => res.value);
+    // Keep the selected game synchronized with the current URL on every
+    // load, including a full refresh of /BO2-ZM or any other game route.
+    selectedGame = getGameFromCurrentUrl();
 
-        if (!responses.length) {
-            throw new Error("No server feeds were available");
-        }
+    status.textContent =
+        "Loading servers...";
 
-        const results = await Promise.all(responses.map(res => res.json()));
+    try {
 
-        if (requestId !== activeLoadRequest) return;
+        const responses =
+            await Promise.all(
 
-        let fetchedServers = results.flatMap(result => {
-            if (result && result.success && result.data && Array.isArray(result.data.servers)) {
-                return result.data.servers.filter(s => s != null);
+                API_URLS.map(
+
+                    url =>
+                        fetch(url)
+
+                )
+
+            );
+
+        responses.forEach(
+
+            response => {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP " +
+                        response.status
+                    );
+
+                }
+
             }
-            return [];
-        });
 
-        // Deduplicate servers by unique ID or IP:Port
-        const uniqueMap = new Map();
-        fetchedServers.forEach(server => {
-            const serverId = getServerKey(server);
-            if (serverId) {
-                uniqueMap.set(serverId, server);
-            }
-        });
+        );
 
-        allServers = Array.from(uniqueMap.values());
-        lastUpdatedTime = new Date();
+        const results =
+            await Promise.all(
 
-        updateHeaderStats();
+                responses.map(
+
+                    response =>
+                        response.json()
+
+                )
+
+            );
+
+        allServers =
+            results.flatMap(
+
+                result => {
+
+                    if (
+
+                        result &&
+                        result.success &&
+                        result.data &&
+                        Array.isArray(
+                            result.data.servers
+                        )
+
+                    ) {
+
+                        return result.data.servers
+
+                            .filter(
+
+                                server =>
+                                    server != null
+
+                            );
+
+                    }
+
+                    return [];
+
+                }
+
+            );
+
+        const uniqueServers =
+            new Map();
+
+        allServers
+
+            .filter(
+
+                server =>
+                    server != null
+
+            )
+
+            .forEach(
+
+                server => {
+
+                    const serverId =
+
+                        server.id ||
+
+                        server.address ||
+
+                        (
+
+                            server.ip &&
+                            server.port
+
+                                ?
+
+                            `${server.ip}:${server.port}`
+
+                                :
+
+                            null
+
+                        );
+
+                    if (serverId) {
+
+                        uniqueServers.set(
+
+                            serverId,
+
+                            server
+
+                        );
+
+                    }
+
+                }
+
+            );
+
+        allServers =
+            Array.from(
+
+                uniqueServers.values()
+
+            );
+
+        const totalPlayers =
+            allServers.reduce(
+
+                (total, server) => {
+
+                    return total +
+
+                        Number(
+
+                            server?.players?.current ||
+
+                            0
+
+                        );
+
+                },
+
+                0
+
+            );
+
+        status.innerHTML =
+
+            allServers.length +
+
+            " servers | " +
+
+            totalPlayers +
+
+            " players online<br>Last updated on<br>" +
+
+new Date().toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+});
+
         renderGameButtons();
+
         renderServers();
 
-    } catch (error) {
-        if (requestId !== activeLoadRequest) return;
-        console.error("Error fetching Plutonium servers:", error);
+    }
 
-        const status = document.getElementById("status");
-        if (status) {
-            status.innerHTML = `<span style="color:#ef4444; font-weight:600;">⚠️ Error loading live server feeds</span>`;
-        }
+    catch (error) {
 
-        if (allServers.length === 0 && serversContainer) {
-            serversContainer.innerHTML = `
-                <div class="no-results">
-                    Live server data is temporarily unavailable. Please try refreshing again in a moment.
-                </div>
+        console.error(error);
+
+        status.innerHTML =
+
+            `
+
+            <span class="error">
+
+                Error loading servers:
+
+                ${escapeHtml(
+
+                    error?.message ||
+
+                    "Unknown error"
+
+                )}
+
+            </span>
+
             `;
-        }
-    } finally {
-        if (requestId === activeLoadRequest) {
-            stopRefreshAnimation();
-        }
+
     }
+
 }
 
-function getServerKey(server) {
-    if (!server) return null;
-    return server.id || server.address || (server.ip && server.port ? `${server.ip}:${server.port}` : null);
-}
+/* =========================
+   BOTONES DE JUEGOS
+========================= */
 
-function updateHeaderStats() {
-    const totalServers = allServers.length;
-    const totalPlayers = allServers.reduce((sum, s) => sum + Number(s?.players?.current || 0), 0);
-
-    // Find top game
-    const gamePlayerCounts = {};
-    allServers.forEach(s => {
-        const gid = s.game?.id || "UNKNOWN";
-        gamePlayerCounts[gid] = (gamePlayerCounts[gid] || 0) + Number(s?.players?.current || 0);
-    });
-
-    let topGameId = "T6";
-    let maxCount = -1;
-    Object.entries(gamePlayerCounts).forEach(([gid, count]) => {
-        if (count > maxCount) {
-            maxCount = count;
-            topGameId = gid;
-        }
-    });
-
-    document.getElementById("statTotalServers").textContent = totalServers.toLocaleString();
-    document.getElementById("statTotalPlayers").textContent = totalPlayers.toLocaleString();
-    document.getElementById("statTopGame").textContent = getShortGameName(topGameId);
-
-    const timeStr = lastUpdatedTime ? lastUpdatedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "Just now";
-    document.getElementById("statLastUpdated").textContent = timeStr;
-
-    const statusEl = document.getElementById("status");
-    if (statusEl) {
-        statusEl.innerHTML = `
-            <span><strong class="status-badge">${totalServers}</strong> servers online</span>
-            <span>•</span>
-            <span><strong class="status-badge">${totalPlayers}</strong> players active</span>
-        `;
-    }
-}
-
-/* Navigation & Game Selection */
 function renderGameButtons() {
-    const container = document.getElementById("gameButtons");
-    if (!container) return;
-    container.innerHTML = "";
 
-    const totalPlayers = allServers.reduce((sum, s) => sum + Number(s?.players?.current || 0), 0);
+    const container =
+        document.getElementById(
+            "gameButtons"
+        );
 
-    // ALL Games Button
-    const allBtn = document.createElement("button");
-    allBtn.className = `game-button ${selectedGame === "ALL" ? "active" : ""}`;
-    allBtn.type = "button";
-    allBtn.innerHTML = `
-        <strong>ALL GAMES</strong>
-        <small>${allServers.length} servers · ${totalPlayers} players</small>
+    container.innerHTML =
+        "";
+
+    const allPlayers =
+        allServers.reduce(
+
+            (total, server) => {
+
+                return total +
+
+                    Number(
+
+                        server?.players?.current ||
+
+                        0
+
+                    );
+
+            },
+
+            0
+
+        );
+
+    const allButton =
+        document.createElement(
+            "button"
+        );
+
+    allButton.className =
+        "game-button";
+    allButton.type = "button";
+
+    if (
+
+        selectedGame ===
+        "ALL"
+
+    ) {
+
+        allButton.classList.add(
+            "active"
+        );
+
+    }
+
+    allButton.innerHTML = `
+
+        <strong>
+            ALL
+        </strong>
+
+        <small>
+
+            All Games
+
+            <br>
+
+            ${allServers.length}
+
+            servers
+
+            ·
+
+            ${allPlayers}
+
+            online
+
+        </small>
+
     `;
-    allBtn.onclick = () => selectGame("ALL");
-    container.appendChild(allBtn);
 
-    // Group servers by game ID
+    allButton.onclick =
+
+        () => {
+
+            selectGame("ALL");
+
+        };
+
+    container.appendChild(
+        allButton
+    );
+
     const games = {};
-    allServers.forEach(server => {
-        const gid = server.game?.id || "UNKNOWN";
-        if (!games[gid]) {
-            games[gid] = { id: gid, name: server.game?.name || GAME_FULL_NAMES[gid] || gid, servers: [] };
+
+    allServers.forEach(
+
+        server => {
+
+            const gameId =
+
+                server.game?.id ||
+
+                "UNKNOWN";
+
+            const gameName =
+
+                server.game?.name ||
+
+                "Unknown Game";
+
+            if (!games[gameId]) {
+
+                games[gameId] = {
+
+                    id:
+                        gameId,
+
+                    name:
+                        gameName,
+
+                    servers:
+                        []
+
+                };
+
+            }
+
+            games[gameId]
+
+                .servers
+
+                .push(server);
+
         }
-        games[gid].servers.push(server);
-    });
 
-    // Render defined order
-    const orderedGameIds = ["T6", "T6ZM", "IW5", "T4", "T4ZM", "T5", "T5ZM"];
-    orderedGameIds.forEach(gid => {
-        const gameData = games[gid] || { id: gid, name: GAME_FULL_NAMES[gid] || gid, servers: [] };
-        const playersCount = gameData.servers.reduce((sum, s) => sum + Number(s?.players?.current || 0), 0);
+    );
 
-        const btn = document.createElement("button");
-        btn.className = `game-button ${selectedGame === gid ? "active" : ""}`;
-        btn.type = "button";
-        btn.innerHTML = `
-            <strong>${escapeHtml(getShortGameName(gid))}</strong>
-            <small>${gameData.servers.length} servers · ${playersCount} online</small>
-        `;
-        btn.onclick = () => selectGame(gid);
-        container.appendChild(btn);
-    });
+    Object.values(games)
+
+        .forEach(
+
+            game => {
+
+                const players =
+
+                    game.servers.reduce(
+
+                        (total, server) => {
+
+                            return total +
+
+                                Number(
+
+                                    server?.players?.current ||
+
+                                    0
+
+                                );
+
+                        },
+
+                        0
+
+                    );
+
+                const button =
+
+                    document.createElement(
+                        "button"
+                    );
+
+                button.className =
+                    "game-button";
+                button.type = "button";
+                button.dataset.gameId = game.id;
+
+                if (
+
+                    selectedGame ===
+                    game.id
+
+                ) {
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                }
+
+                button.innerHTML = `
+
+                    <strong>
+
+                        ${escapeHtml(
+
+                            getShortGameName(
+
+                                game.id
+
+                            )
+
+                        )}
+
+                    </strong>
+
+                    <small>
+
+                        ${escapeHtml(
+
+                            game.name
+
+                        )}
+
+                        <br>
+
+                        ${game.servers.length}
+
+                        servers
+
+                        ·
+
+                        ${players}
+
+                        online
+
+                    </small>
+
+                `;
+
+                button.onclick =
+
+                    () => {
+
+                        selectGame(game.id);
+
+                    };
+
+                container.appendChild(
+                    button
+                );
+
+            }
+
+        );
+
+}
+
+/* =========================
+   NOMBRES CORTOS
+========================= */
+
+function getShortGameName(
+
+    gameId
+
+) {
+
+    const names = {
+
+        "T6":
+            "BO2 MP",
+
+        "T6ZM":
+            "BO2 ZM",
+
+        "IW5":
+            "MW3 MP",
+
+        "T5":
+            "BO1 MP",
+
+        "T5ZM":
+            "BO1 ZM",
+
+        "T4":
+            "WaW MP",
+
+        "T4ZM":
+            "WaW ZM"
+
+    };
+
+    return names[gameId] ||
+
+        gameId;
+
 }
 
 function selectGame(gameId) {
     selectedGame = gameId || "ALL";
     expandedServerId = null;
+
+    const hash =
+        selectedGame === "ALL"
+            ? ""
+            : `#${GAME_PATHS[selectedGame]}`;
+
+    window.history.pushState(
+        { game: selectedGame },
+        "",
+        `${window.location.pathname}${window.location.search}${hash}`
+    );
+
     renderGameButtons();
     renderServers();
-
-    const targetPath = GAME_PATHS[selectedGame] || "/";
-    if (window.location.protocol === "file:") {
-        window.location.hash = selectedGame === "ALL" ? "" : targetPath.slice(1);
-    } else if (window.location.pathname !== targetPath) {
-        window.history.pushState({ game: selectedGame }, "", targetPath + window.location.search);
-    }
 }
 
-function getGameFromCurrentUrl() {
-    const currentPath = window.location.pathname.replace(/\/+$/, "").toLowerCase() || "/";
-    const pathMatch = Object.entries(GAME_PATHS).find(([, p]) => p.toLowerCase() === currentPath);
-    if (pathMatch) return pathMatch[0];
-
-    if (window.location.protocol === "file:") {
-        const hash = window.location.hash.slice(1);
-        const hashMatch = Object.entries(GAME_PATHS).find(([, p]) => p.slice(1).toLowerCase() === hash.toLowerCase());
-        if (hashMatch) return hashMatch[0];
+window.addEventListener(
+    "popstate",
+    () => {
+        selectedGame = getGameFromCurrentUrl();
+        expandedServerId = null;
+        renderGameButtons();
+        renderServers();
     }
-    return "ALL";
-}
+);
 
-window.addEventListener("popstate", () => {
-    selectedGame = getGameFromCurrentUrl();
-    expandedServerId = null;
-    renderGameButtons();
-    renderServers();
-});
+window.addEventListener(
+    "hashchange",
+    () => {
+        selectedGame = getGameFromCurrentUrl();
+        expandedServerId = null;
+        renderGameButtons();
+        renderServers();
+    }
+);
 
-/* Server Filtering and Rendering */
+/* =========================
+   RENDER SERVIDORES
+========================= */
+
 function renderServers() {
-    const container = document.getElementById("servers");
-    if (!container) return;
-    container.innerHTML = "";
 
-    let filtered = allServers;
+    const container =
+        document.getElementById(
+            "servers"
+        );
 
-    if (selectedGame !== "ALL") {
-        filtered = filtered.filter(s => s.game?.id === selectedGame);
-    }
+    container.innerHTML =
+        "";
 
-    if (filterHasPlayersOnly) {
-        filtered = filtered.filter(s => Number(s.players?.current || 0) > 0);
-    }
+    let filteredServers =
+        allServers;
 
-    if (filterZombiesOnly) {
-        filtered = filtered.filter(s => s.isZombies || s.game?.id?.includes("ZM") || (s.mode?.raw || "").toLowerCase().includes("zm"));
+    if (
+
+        selectedGame !==
+        "ALL"
+
+    ) {
+
+        filteredServers =
+
+            filteredServers.filter(
+
+                server =>
+
+                    server.game?.id ===
+
+                    selectedGame
+
+            );
+
     }
 
     if (searchQuery) {
-        filtered = filtered.filter(s => {
-            if (!s) return false;
-            const text = [
-                s.name,
-                s.map?.display,
-                s.map?.raw,
-                s.mode?.display,
-                s.mode?.raw,
-                s.location?.countryName,
-                s.location?.countryCode,
-                s.game?.name,
-                s.game?.id,
-                s.ip,
-                s.address
-            ].filter(Boolean).join(" ").toLowerCase();
-            return text.includes(searchQuery);
-        });
+
+        filteredServers =
+
+            filteredServers.filter(
+
+                server => {
+
+                    if (!server) {
+
+                        return false;
+
+                    }
+
+                    const searchableText = [
+
+                        server.name,
+
+                        server.ip,
+
+                        server.address,
+
+                        server.map?.display,
+
+                        server.map?.raw,
+
+                        server.mode?.display,
+
+                        server.mode?.raw,
+
+                        server.location?.countryName,
+
+                        server.location?.countryCode,
+
+                        server.game?.name,
+
+                        server.game?.id
+
+                    ]
+
+                        .filter(Boolean)
+
+                        .join(" ")
+
+                        .toLowerCase();
+
+                    return searchableText.includes(
+
+                        searchQuery
+
+                    );
+
+                }
+
+            );
+
     }
 
-    if (filtered.length === 0) {
-        container.innerHTML = `<div class="no-results">No servers found matching your filter criteria.</div>`;
-        return;
-    }
-
-    const groupedGames = {};
+    const games = {};
 
     if (selectedGame === "ALL") {
-        // Group by Game ID for organized list
-        filtered.forEach(s => {
-            const gid = s.game?.id || "UNKNOWN";
-            if (!groupedGames[gid]) {
-                groupedGames[gid] = { name: s.game?.name || GAME_FULL_NAMES[gid] || gid, servers: [] };
-            }
-            groupedGames[gid].servers.push(s);
-        });
-    } else {
-        groupedGames[selectedGame] = {
-            name: GAME_FULL_NAMES[selectedGame] || selectedGame,
-            servers: filtered
+        games.ALL = {
+            name: "All Games",
+            servers: filteredServers.filter(server => server != null)
         };
+    } else filteredServers
+
+        .filter(
+
+            server =>
+                server != null
+
+        )
+
+        .forEach(
+
+            server => {
+
+                const gameId =
+
+                    server.game?.id ||
+
+                    "UNKNOWN";
+
+                const gameName =
+
+                    server.game?.name ||
+
+                    "Unknown Game";
+
+                if (!games[gameId]) {
+
+                    games[gameId] = {
+
+                        name:
+                            gameName,
+
+                        servers:
+                            []
+
+                    };
+
+                }
+
+                games[gameId]
+
+                    .servers
+
+                    .push(server);
+
+            }
+
+        );
+
+    Object.entries(games)
+
+        .forEach(
+
+            ([gameId, game]) => {
+
+                renderGame(
+
+                    gameId,
+
+                    game,
+
+                    container
+
+                );
+
+            }
+
+        );
+
+    if (
+
+        filteredServers.length ===
+        0
+
+    ) {
+
+        container.innerHTML =
+
+            `
+
+            <div class="no-results">
+
+                No servers found.
+
+            </div>
+
+            `;
+
     }
 
-    Object.entries(groupedGames).forEach(([gid, gameData]) => {
-        renderGameSection(gid, gameData, container);
-    });
 }
 
-function renderGameSection(gameId, gameData, container) {
-    const section = document.createElement("div");
-    section.className = "game-section";
+/* =========================
+   RENDER GAME
+========================= */
 
-    const totalPlayers = gameData.servers.reduce((sum, s) => sum + Number(s.players?.current || 0), 0);
+function renderGame(
 
-    const title = document.createElement("div");
-    title.className = "game-title";
-    title.innerHTML = `
-        <span>${escapeHtml(gameData.name)}</span>
-        <span class="game-title-meta">${gameData.servers.length} servers · ${totalPlayers} players online</span>
+    gameId,
+
+    game,
+
+    container
+
+) {
+
+    const gameElement =
+
+        document.createElement(
+            "div"
+        );
+
+    gameElement.className =
+        "game";
+
+    gameElement.dataset.gameId =
+        gameId;
+
+    const gameTitle =
+
+        document.createElement(
+            "h2"
+        );
+
+    gameTitle.className =
+        "game-title";
+
+    gameTitle.textContent =
+
+        game.name +
+
+        " - " +
+
+        game.servers.length +
+
+        " servers";
+
+    gameElement.appendChild(
+        gameTitle
+    );
+
+    const tableContainer =
+
+        document.createElement(
+            "div"
+        );
+
+    tableContainer.className =
+        "table-container";
+
+    const table =
+
+        document.createElement(
+            "table"
+        );
+
+    const thead =
+
+        document.createElement(
+            "thead"
+        );
+
+    thead.innerHTML = `
+
+        <tr>
+
+            <th onclick="sortByCountry()">
+
+                Country
+
+                ${
+
+                    currentSort ===
+                    "country"
+
+                        ?
+
+                    `
+
+                        <span class="sort-arrow">
+
+                            ${
+
+                                sortDescending
+
+                                    ?
+
+                                "▼"
+
+                                    :
+
+                                "▲"
+
+                            }
+
+                        </span>
+
+                    `
+
+                        :
+
+                    ""
+
+                }
+
+            </th>
+
+            <th onclick="sortByServer()">
+                Server
+                ${currentSort === "server" ? `<span class="sort-arrow">${sortDescending ? "&#9660;" : "&#9650;"}</span>` : ""}
+            </th>
+
+            <th onclick="sortByPlayers()">
+
+                Players
+
+                ${
+
+                    currentSort ===
+                    "players"
+
+                        ?
+
+                    `
+
+                        <span class="sort-arrow">
+
+                            ${
+
+                                sortDescending
+
+                                    ?
+
+                                "▼"
+
+                                    :
+
+                                "▲"
+
+                            }
+
+                        </span>
+
+                    `
+
+                        :
+
+                    ""
+
+                }
+
+            </th>
+
+            <th onclick="sortByMap()">
+                Map
+                ${currentSort === "map" ? `<span class="sort-arrow">${sortDescending ? "&#9660;" : "&#9650;"}</span>` : ""}
+            </th>
+
+            <th onclick="sortByMode()">
+                Mode
+                ${currentSort === "mode" ? `<span class="sort-arrow">${sortDescending ? "&#9660;" : "&#9650;"}</span>` : ""}
+            </th>
+
+        </tr>
+
     `;
-    section.appendChild(title);
 
-    const tableContainer = document.createElement("div");
-    tableContainer.className = "table-container";
+    table.appendChild(
+        thead
+    );
 
-    const table = document.createElement("table");
-    const sortedServers = [...gameData.servers].sort(sortServers);
+    const tbody =
 
-    table.innerHTML = `
-        <thead>
-            <tr>
-                <th class="country-column ${currentSort === "country" ? "active-sort" : ""}" onclick="sortBy('country')">
-                    Flag ${currentSort === "country" ? (sortDescending ? "▼" : "▲") : ""}
-                </th>
-                <th class="server-column ${currentSort === "server" ? "active-sort" : ""}" onclick="sortBy('server')">
-                    Server Name ${currentSort === "server" ? (sortDescending ? "▼" : "▲") : ""}
-                </th>
-                <th class="players-column ${currentSort === "players" ? "active-sort" : ""}" onclick="sortBy('players')">
-                    Players ${currentSort === "players" ? (sortDescending ? "▼" : "▲") : ""}
-                </th>
-                <th class="game-column ${currentSort === "game" ? "active-sort" : ""}" onclick="sortBy('game')">
-                    Game ${currentSort === "game" ? (sortDescending ? "▼" : "▲") : ""}
-                </th>
-                <th class="map-column ${currentSort === "map" ? "active-sort" : ""}" onclick="sortBy('map')">
-                    Map ${currentSort === "map" ? (sortDescending ? "▼" : "▲") : ""}
-                </th>
-                <th class="mode-column ${currentSort === "mode" ? "active-sort" : ""}" onclick="sortBy('mode')">
-                    Mode ${currentSort === "mode" ? (sortDescending ? "▼" : "▲") : ""}
-                </th>
-            </tr>
-        </thead>
-    `;
+        document.createElement(
+            "tbody"
+        );
 
-    const tbody = document.createElement("tbody");
+    const sortedServers =
 
-    sortedServers.forEach(server => {
-        const serverId = getServerKey(server);
-        const currentP = Number(server.players?.current || 0);
-        const maxP = Number(server.players?.max || 0);
+        [...game.servers]
 
-        let playerClass = "player-empty";
-        if (currentP === maxP && maxP > 0) playerClass = "player-full";
-        else if (currentP >= 9) playerClass = "player-medium";
-        else if (currentP >= 1) playerClass = "player-low";
+            .sort(
 
-        let countryCode = server.location?.countryCode || getCountryCode(server.location?.countryName) || "XX";
-        let countryName = server.location?.countryName || "Unknown Country";
+                sortServers
 
-        if (server.ip === "74.0.5.27") { countryName = "Brazil"; countryCode = "BR"; }
-        if (server.ip === "100.92.24.78" || server.ip === "100.92.44.197") { countryName = "United States"; countryCode = "US"; }
-        if (server.ip === "100.92.6.225" || server.ip === "100.92.100.197") { countryName = "Italy"; countryCode = "IT"; }
+            );
 
-        const isExpanded = expandedServerId === serverId;
+    sortedServers.forEach(
 
-        const row = document.createElement("tr");
-        row.className = "server-row";
-        row.onclick = () => toggleServer(serverId);
+        server => {
 
-        row.innerHTML = `
-            <td class="country" title="${escapeHtml(countryName)}">
-                ${getCountryFlagHtml(countryCode)}
-            </td>
-            <td class="server-name">
-                <span class="expand-arrow ${isExpanded ? "open" : ""}">▼</span>
-                ${escapeHtml(server.name || "Unknown Plutonium Server")}
-            </td>
-            <td class="players-count">
-                <span class="player-box ${playerClass}">${currentP}/${maxP}</span>
-            </td>
-            <td class="game-name">
-                <span class="game-badge">${escapeHtml(getShortGameName(server.game?.id || gameId))}</span>
-            </td>
-            <td class="map-cell">
-                ${escapeHtml(server.map?.display || server.map?.raw || "Unknown")}
-            </td>
-            <td class="mode-cell">
-                ${escapeHtml(server.mode?.display || server.mode?.raw || "Unknown")}
-            </td>
-        `;
+            if (!server) {
 
-        tbody.appendChild(row);
+                return;
 
-        if (isExpanded) {
-            const detailsRow = createDetailsRow(server);
-            tbody.appendChild(detailsRow);
+            }
+
+            const serverId =
+
+                server.id ||
+
+                server.address ||
+
+                (
+
+                    server.ip &&
+                    server.port
+
+                        ?
+
+                    `${server.ip}:${server.port}`
+
+                        :
+
+                    Math.random()
+
+                );
+
+            const players =
+                server.players || {};
+
+            const currentPlayers =
+
+                Number(
+
+                    players.current ||
+
+                    0
+
+                );
+
+            const maxPlayers =
+
+                Number(
+
+                    players.max ||
+
+                    0
+
+                );
+
+            let country =
+
+                server.location?.countryName ||
+
+                server.location?.countryCode ||
+
+                "Unknown";
+
+            let countryCode =
+
+                server.location?.countryCode ||
+
+                getCountryCode(country);
+
+            if (
+
+                server.ip ===
+                "74.0.5.27"
+
+            ) {
+
+                country =
+                    "Brazil";
+
+                countryCode =
+                    "BR";
+
+            }
+
+            const flag =
+
+                getCountryFlag(
+
+                    countryCode
+
+                );
+
+            const isExpanded =
+
+                expandedServerId ===
+                serverId;
+            let playerClass="player-empty";
+            if(currentPlayers==maxPlayers && maxPlayers>0){playerClass="player-full";}
+            else if(currentPlayers>=9){playerClass="player-medium";}
+            else if(currentPlayers>=1){playerClass="player-low";}
+
+            const row =
+
+                document.createElement(
+                    "tr"
+                );
+
+            row.className =
+                "server-row";
+
+            row.onclick =
+
+                () => {
+
+                    toggleServer(
+
+                        serverId
+
+                    );
+
+                };
+
+            row.innerHTML = `
+
+                <td
+
+                    class="country"
+
+                    title="${escapeHtml(country)}"
+
+                >
+
+                    ${flag}
+
+                </td>
+
+                <td class="server-name">
+
+                    <span
+
+                        class="expand-arrow ${
+
+                            isExpanded
+
+                                ?
+
+                            "open"
+
+                                :
+
+                            ""
+
+                        }"
+
+                    >
+
+                        ${
+
+                            isExpanded
+
+                                ?
+
+                            "⌃"
+
+                                :
+
+                            "⌄"
+
+                        }
+
+                    </span>
+
+                    ${escapeHtml(
+
+                        server.name ||
+
+                        "Unknown Server"
+
+                    )}
+
+                </td>
+
+                <td class="players-count"><span class="player-box ${playerClass}">${currentPlayers}/${maxPlayers}</span></td>
+
+                <td>
+
+                    ${escapeHtml(
+
+                        server.map?.display ||
+
+                        server.map?.raw ||
+
+                        "Unknown"
+
+                    )}
+
+                </td>
+
+                <td>
+
+                    ${escapeHtml(
+
+                        server.mode?.display ||
+
+                        server.mode?.raw ||
+
+                        "Unknown"
+
+                    )}
+
+                </td>
+
+            `;
+
+            tbody.appendChild(
+                row
+            );
+
+            if (
+
+                expandedServerId ===
+                serverId
+
+            ) {
+
+                const detailsRow =
+
+                    createDetailsRow(
+
+                        server
+
+                    );
+
+                tbody.appendChild(
+                    detailsRow
+                );
+
+            }
+
         }
-    });
 
-    table.appendChild(tbody);
-    tableContainer.appendChild(table);
-    section.appendChild(tableContainer);
-    container.appendChild(section);
+    );
+
+    table.appendChild(
+        tbody
+    );
+
+    tableContainer.appendChild(
+        table
+    );
+
+    gameElement.appendChild(
+        tableContainer
+    );
+
+    container.appendChild(
+        gameElement
+    );
+
 }
 
-function createDetailsRow(server) {
-    const row = document.createElement("tr");
-    row.className = "details-row";
+/* =========================
+   BANDERAS
+========================= */
 
-    const cell = document.createElement("td");
-    cell.colSpan = 6;
+function getCountryFlag(
 
-    const address = server.address || (server.ip && server.port ? `${server.ip}:${server.port}` : "");
-    const connectCmd = address ? `connect ${address}` : "";
-    const gameName = getShortGameName(server.game?.id || "UNKNOWN");
-    const fullGame = GAME_FULL_NAMES[server.game?.id] || server.game?.name || "Plutonium Game";
+    countryCode
 
-    cell.innerHTML = `
-        <div class="details-card">
-            <div class="detail-item">
-                <span class="detail-label">Server Name</span>
-                <div class="detail-value">
-                    <span>${escapeHtml(server.name || "Unknown Server")}</span>
+) {
 
-                </div>
-            </div>
+    if (
 
+        !countryCode ||
 
+        countryCode.length !== 2
 
-            <div class="detail-item">
-                <span class="detail-label">Game & Mode</span>
-                <span class="detail-value">${escapeHtml(fullGame)} (${escapeHtml(server.mode?.display || server.mode?.raw || 'N/A')})</span>
-            </div>
+    ) {
 
-            <div class="detail-item">
-                <span class="detail-label">Current Map</span>
-                <span class="detail-value">${escapeHtml(server.map?.display || server.map?.raw || 'N/A')}</span>
-            </div>
+        return "🌐";
 
-            <div class="detail-item">
-                <span class="detail-label">Players & Bots</span>
-                <span class="detail-value">${server.players?.current || 0} / ${server.players?.max || 0} (${server.players?.bots || 0} bots)</span>
-            </div>
+    }
 
+    const code =
 
-        </div>
+        countryCode
+
+            .toLowerCase();
+
+    return `
+
+        <img
+
+            src="https://flagcdn.com/w40/${code}.png"
+
+            alt="${code}"
+
+            class="country-flag"
+
+            loading="lazy"
+
+        >
+
     `;
 
-    row.appendChild(cell);
-    return row;
 }
 
-function toggleServer(serverId) {
-    expandedServerId = expandedServerId === serverId ? null : serverId;
-    renderServers();
-}
+/* =========================
+   CODIGOS DE PAIS
+========================= */
 
-function handleCopyBtnClick(event) {
-    event.stopPropagation();
-    const btn = event.currentTarget;
-    const text = btn.getAttribute("data-copy-text") || "";
-    if (!text) return;
+function getCountryCode(
 
-    const origHtml = btn.innerHTML;
+    countryName
 
-    navigator.clipboard.writeText(text).then(() => {
-        btn.innerHTML = "✓ Copied!";
-        btn.classList.add("copied");
-        setTimeout(() => {
-            btn.innerHTML = origHtml;
-            btn.classList.remove("copied");
-        }, 1500);
-    }).catch(() => {
-        // Fallback copy
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
+) {
 
-        btn.innerHTML = "✓ Copied!";
-        btn.classList.add("copied");
-        setTimeout(() => {
-            btn.innerHTML = origHtml;
-            btn.classList.remove("copied");
-        }, 1500);
-    });
-}
+    const countries = {
 
-/* Sorting Logic */
-function sortBy(column) {
-    if (currentSort === column) {
-        sortDescending = !sortDescending;
-    } else {
-        currentSort = column;
-        sortDescending = column === "players";
+        "argentina":
+            "AR",
+
+        "brazil":
+            "BR",
+
+        "brasil":
+            "BR",
+
+        "united states":
+            "US",
+
+        "usa":
+            "US",
+
+        "canada":
+            "CA",
+
+        "mexico":
+            "MX",
+
+        "chile":
+            "CL",
+
+        "uruguay":
+            "UY",
+
+        "paraguay":
+            "PY",
+
+        "bolivia":
+            "BO",
+
+        "peru":
+            "PE",
+
+        "colombia":
+            "CO",
+
+        "venezuela":
+            "VE",
+
+        "ecuador":
+            "EC",
+
+        "germany":
+            "DE",
+
+        "france":
+            "FR",
+
+        "spain":
+            "ES",
+
+        "italy":
+            "IT",
+
+        "portugal":
+            "PT",
+
+        "united kingdom":
+            "GB",
+
+        "uk":
+            "GB",
+
+        "netherlands":
+            "NL",
+
+        "belgium":
+            "BE",
+
+        "switzerland":
+            "CH",
+
+        "austria":
+            "AT",
+
+        "poland":
+            "PL",
+
+        "russia":
+            "RU",
+
+        "ukraine":
+            "UA",
+
+        "turkey":
+            "TR",
+
+        "australia":
+            "AU",
+
+        "japan":
+            "JP",
+
+        "china":
+            "CN",
+
+        "south korea":
+            "KR",
+
+        "india":
+            "IN",
+
+        "singapore":
+            "SG",
+
+        "south africa":
+            "ZA"
+
+    };
+
+    if (!countryName) {
+
+        return null;
+
     }
-    renderServers();
+
+    return countries[
+
+        String(countryName)
+
+            .trim()
+
+            .toLowerCase()
+
+    ] || null;
+
 }
 
-function sortServers(a, b) {
-    if (!a || !b) return 0;
+/* =========================
+   ORDENAMIENTO
+========================= */
 
-    if (currentSort === "country") {
-        const cA = (a.location?.countryName || "Unknown").toLowerCase();
-        const cB = (b.location?.countryName || "Unknown").toLowerCase();
-        const res = cA.localeCompare(cB);
-        return sortDescending ? -res : res;
+function sortServers(
+
+    a,
+
+    b
+
+) {
+
+    if (!a || !b) {
+
+        return 0;
+
     }
 
-    if (currentSort === "players") {
-        const pA = Number(a.players?.current || 0);
-        const pB = Number(b.players?.current || 0);
-        return sortDescending ? pB - pA : pA - pB;
+    if (
+
+        currentSort ===
+        "country"
+
+    ) {
+
+        const countryA =
+
+            (
+
+                a.location?.countryName ||
+
+                a.location?.countryCode ||
+
+                "Unknown"
+
+            )
+
+                .toLowerCase();
+
+        const countryB =
+
+            (
+
+                b.location?.countryName ||
+
+                b.location?.countryCode ||
+
+                "Unknown"
+
+            )
+
+                .toLowerCase();
+
+        const result =
+
+            countryA.localeCompare(
+
+                countryB
+
+            );
+
+        return sortDescending
+
+            ?
+
+            -result
+
+            :
+
+            result;
+
+    }
+
+    if (
+
+        currentSort ===
+        "players"
+
+    ) {
+
+        const playersA =
+
+            Number(
+
+                a.players?.current ||
+
+                0
+
+            );
+
+        const playersB =
+
+            Number(
+
+                b.players?.current ||
+
+                0
+
+            );
+
+        return sortDescending
+
+            ?
+
+            playersB - playersA
+
+            :
+
+            playersA - playersB;
+
     }
 
     if (currentSort === "server") {
-        const res = (a.name || "").toLowerCase().localeCompare((b.name || "").toLowerCase());
-        return sortDescending ? -res : res;
+        const r = (a.name||"").toLowerCase().localeCompare((b.name||"").toLowerCase());
+        return sortDescending ? -r : r;
     }
-
-    if (currentSort === "game") {
-        const gA = getShortGameName(a.game?.id || "UNKNOWN").toLowerCase();
-        const gB = getShortGameName(b.game?.id || "UNKNOWN").toLowerCase();
-        const res = gA.localeCompare(gB);
-        return sortDescending ? -res : res;
-    }
-
     if (currentSort === "map") {
-        const mA = (a.map?.display || a.map?.raw || "").toLowerCase();
-        const mB = (b.map?.display || b.map?.raw || "").toLowerCase();
-        const res = mA.localeCompare(mB);
-        return sortDescending ? -res : res;
+        const r = (a.map?.display||a.map?.raw||"").toLowerCase().localeCompare((b.map?.display||b.map?.raw||"").toLowerCase());
+        return sortDescending ? -r : r;
     }
-
     if (currentSort === "mode") {
-        const moA = (a.mode?.display || a.mode?.raw || "").toLowerCase();
-        const moB = (b.mode?.display || b.mode?.raw || "").toLowerCase();
-        const res = moA.localeCompare(moB);
-        return sortDescending ? -res : res;
+        const r = (a.mode?.display||a.mode?.raw||"").toLowerCase().localeCompare((b.mode?.display||b.mode?.raw||"").toLowerCase());
+        return sortDescending ? -r : r;
     }
-
     return 0;
+
 }
 
-/* Search and Filters */
-function handleSearchInput(event) {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-        searchServers();
-    }, 200);
-}
+/* =========================
+   ORDENAR POR PAIS
+========================= */
 
-function handleSearchKey(event) {
-    if (event.key === "Enter") {
-        searchServers();
+function sortByCountry() {
+
+    if (
+
+        currentSort ===
+        "country"
+
+    ) {
+
+        sortDescending =
+            !sortDescending;
+
     }
+
+    else {
+
+        currentSort =
+            "country";
+
+        sortDescending =
+            false;
+
+    }
+
+    renderServers();
+
+}
+
+/* =========================
+   ORDENAR POR JUGADORES
+========================= */
+
+function sortByPlayers() {
+
+    if (
+
+        currentSort ===
+        "players"
+
+    ) {
+
+        sortDescending =
+            !sortDescending;
+
+    }
+
+    else {
+
+        currentSort =
+            "players";
+
+        sortDescending =
+            true;
+
+    }
+
+    renderServers();
+
+}
+
+function sortByServer(){
+    if(currentSort==="server"){sortDescending=!sortDescending;}else{currentSort="server";sortDescending=false;}
+    renderServers();
+}
+function sortByMap(){
+    if(currentSort==="map"){sortDescending=!sortDescending;}else{currentSort="map";sortDescending=false;}
+    renderServers();
+}
+function sortByMode(){
+    if(currentSort==="mode"){sortDescending=!sortDescending;}else{currentSort="mode";sortDescending=false;}
+    renderServers();
+}
+
+/* =========================
+   BUSQUEDA
+========================= */
+
+function handleSearchKey(
+
+    event
+
+) {
+
+    if (
+
+        event.key ===
+        "Enter"
+
+    ) {
+
+        searchServers();
+
+    }
+
 }
 
 function searchServers() {
-    const input = document.getElementById("searchInput");
-    searchQuery = (input ? input.value : "").trim().toLowerCase();
 
-    const url = new URL(window.location.href);
-    if (searchQuery) {
-        url.searchParams.set("q", searchQuery);
-    } else {
-        url.searchParams.delete("q");
+    const input =
+
+        document.getElementById(
+
+            "searchInput"
+
+        );
+
+    const query =
+
+        input.value
+
+            .trim()
+
+            .toLowerCase();
+
+    searchQuery =
+        query;
+
+    const url =
+
+        new URL(
+
+            window.location.href
+
+        );
+
+    if (query) {
+
+        url.searchParams.set(
+
+            "q",
+
+            query
+
+        );
+
     }
-    window.history.replaceState({}, "", url);
 
-    expandedServerId = null;
+    else {
+
+        url.searchParams.delete(
+
+            "q"
+
+        );
+
+    }
+
+    window.history.pushState(
+
+        {},
+
+        "",
+
+        url
+
+    );
+
+    expandedServerId =
+        null;
+
     renderServers();
+
 }
 
 function clearSearch() {
-    const input = document.getElementById("searchInput");
-    if (input) input.value = "";
-    searchQuery = "";
 
-    const url = new URL(window.location.href);
-    url.searchParams.delete("q");
-    window.history.replaceState({}, "", url);
+    const input =
 
-    expandedServerId = null;
+        document.getElementById(
+
+            "searchInput"
+
+        );
+
+    input.value =
+        "";
+
+    searchQuery =
+        "";
+
+    const url =
+
+        new URL(
+
+            window.location.href
+
+        );
+
+    url.searchParams.delete(
+
+        "q"
+
+    );
+
+    window.history.pushState(
+
+        {},
+
+        "",
+
+        url
+
+    );
+
+    expandedServerId =
+        null;
+
     renderServers();
+
 }
 
-function toggleFilterHasPlayers() {
-    filterHasPlayersOnly = !filterHasPlayersOnly;
-    const chip = document.getElementById("filterHasPlayers");
-    if (chip) chip.classList.toggle("active", filterHasPlayersOnly);
-    renderServers();
-}
+/* =========================
+   EXPANDIR SERVIDOR
+========================= */
 
-function toggleFilterZombies() {
-    filterZombiesOnly = !filterZombiesOnly;
-    const chip = document.getElementById("filterZombies");
-    if (chip) chip.classList.toggle("active", filterZombiesOnly);
-    renderServers();
-}
+function toggleServer(
 
-/* Utility Helpers */
-function getShortGameName(gameId) {
-    return GAME_NAMES[gameId] || gameId;
-}
+    serverId
 
-function getCountryFlagHtml(countryCode) {
-    if (!countryCode || countryCode.length !== 2 || countryCode === "XX") {
-        return "🌐";
+) {
+
+    if (
+
+        expandedServerId ===
+        serverId
+
+    ) {
+
+        expandedServerId =
+            null;
+
     }
-    const code = countryCode.toLowerCase();
-    return `<img src="https://flagcdn.com/w40/${code}.png" alt="${code}" class="country-flag" loading="lazy">`;
+
+    else {
+
+        expandedServerId =
+            serverId;
+
+    }
+
+    renderServers();
+
 }
 
-function getCountryCode(countryName) {
-    if (!countryName) return null;
-    const map = {
-        "argentina": "AR", "brazil": "BR", "brasil": "BR", "united states": "US", "usa": "US",
-        "canada": "CA", "mexico": "MX", "chile": "CL", "germany": "DE", "france": "FR",
-        "spain": "ES", "italy": "IT", "united kingdom": "GB", "uk": "GB", "netherlands": "NL",
-        "poland": "PL", "russia": "RU", "australia": "AU", "japan": "JP", "south korea": "KR"
-    };
-    return map[String(countryName).trim().toLowerCase()] || null;
+/* =========================
+   DETALLES
+========================= */
+
+function createDetailsRow(
+
+    server
+
+) {
+
+    const row =
+
+        document.createElement(
+            "tr"
+        );
+
+    row.className =
+        "details-row";
+
+    const cell =
+
+        document.createElement(
+            "td"
+        );
+
+    cell.colSpan =
+        5;
+
+    const details =
+
+        document.createElement(
+            "div"
+        );
+
+    details.className =
+        "details";
+
+    const players =
+        server.players || {};
+
+    const address =
+
+        server.address ||
+
+        (
+
+            server.ip &&
+            server.port
+
+                ?
+
+            `${server.ip}:${server.port}`
+
+                :
+
+            "Unknown"
+
+        );
+
+    details.innerHTML = `
+        <p><strong>Servername:</strong> ${escapeHtml(server.name || "Unknown Server")}</p>
+        <p><strong>Connect:</strong> ${escapeHtml(address)}
+        <button class="copy-button" onclick="copyConnectCommand(event,'${escapeHtml(address)}')" title="Copy connection command">⧉</button></p>
+        <p><strong>Players:</strong> ${players.current || 0} / ${players.max || 0}</p>
+        <p><strong>Map:</strong> ${escapeHtml(server.map?.display || server.map?.raw || "Unknown")}</p>
+        <p><strong>Mode:</strong> ${escapeHtml(server.mode?.display || server.mode?.raw || "Unknown")}</p>
+    `;
+
+    cell.appendChild(
+        details
+    );
+
+    row.appendChild(
+        cell
+    );
+
+    return row;
+
 }
 
-function startRefreshAnimation() {
-    const button = document.getElementById("refreshButton");
-    if (button) button.classList.add("is-loading");
+/* =========================
+   COPIAR CONEXION
+========================= */
+
+function copyConnectCommand(
+
+    event,
+
+    address
+
+) {
+
+    event.stopPropagation();
+
+    const command =
+
+        "connect " +
+
+        address;
+
+    navigator.clipboard.writeText(
+
+        command
+
+    );
+
+    const button =
+        event.currentTarget;
+
+    button.textContent =
+        "✓";
+
+    button.classList.add(
+        "copied"
+    );
+
+    setTimeout(
+
+        () => {
+
+            button.textContent =
+                "⧉";
+
+            button.classList.remove(
+                "copied"
+            );
+
+        },
+
+        1500
+
+    );
+
 }
 
-function stopRefreshAnimation() {
-    const button = document.getElementById("refreshButton");
-    if (button) button.classList.remove("is-loading");
-}
+/* =========================
+   MODO OSCURO
+========================= */
 
 function toggleDarkMode() {
-    document.body.classList.toggle("light-mode");
-    const isLight = document.body.classList.contains("light-mode");
-    localStorage.setItem("themePreference", isLight ? "light" : "dark");
 
-    const btn = document.getElementById("darkModeButton");
-    if (btn) btn.textContent = isLight ? "🌙" : "☀️";
+    document.body.classList.toggle(
+
+        "dark-mode"
+
+    );
+
+    const enabled =
+
+        document.body.classList.contains(
+
+            "dark-mode"
+
+        );
+
+    localStorage.setItem(
+
+        "darkMode",
+
+        enabled
+
+            ?
+
+        "yes"
+
+            :
+
+        "no"
+
+    );
+
+    document.getElementById(
+
+        "darkModeButton"
+
+    ).textContent =
+
+        enabled
+
+            ?
+
+        "☀️"
+
+            :
+
+        "🌙";
+
 }
 
-function initDarkMode() {
-    const saved = localStorage.getItem("themePreference");
-    if (saved === "light") {
-        document.body.classList.add("light-mode");
-        const btn = document.getElementById("darkModeButton");
-        if (btn) btn.textContent = "🌙";
+function loadDarkMode() {
+
+    const savedMode =
+
+        localStorage.getItem(
+
+            "darkMode"
+
+        );
+
+    if (
+
+        savedMode === null ||
+
+        savedMode === "yes"
+
+    ) {
+
+        document.body.classList.add(
+
+            "dark-mode"
+
+        );
+
+        document.getElementById(
+
+            "darkModeButton"
+
+        ).textContent =
+
+            "☀️";
+
     }
+
 }
 
-function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = String(text ?? "");
+/* =========================
+   ESCAPAR HTML
+========================= */
+
+function escapeHtml(
+
+    text
+
+) {
+
+    const div =
+
+        document.createElement(
+
+            "div"
+
+        );
+
+    div.textContent =
+
+        String(
+
+            text ?? ""
+
+        );
+
     return div.innerHTML;
+
 }
+
+/* =========================
+   INICIAR
+========================= */
+
+loadDarkMode();
+
+selectedGame =
+    getGameFromCurrentUrl();
+
+loadServers();
+
+setInterval(
+
+    loadServers,
+
+    30000
+
+);
 
 </script>
 
 </body>
+
 </html>
