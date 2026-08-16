@@ -6,7 +6,7 @@
 
     <title>Plutonium Servers</title>
 
-    <meta name="google-site-verification" content="CBrCLwQWx7B6SsjaUSoG34QsmkRk4fhPTcYjsXTT8KY">
+    <meta name="google-site-verification" content="Azbr9S9pkRxNnAvaJUyEK6nke3LzKKrvUv7fREwoxyA">
     <meta name="description" content="Browse live Plutonium game servers for Black Ops II, Modern Warfare 3, World at War and Black Ops. View players, maps, game modes and server information.">
     <meta name="robots" content="index, follow">
 
@@ -16,12 +16,12 @@
     <link rel="apple-touch-icon" sizes="128x128" href="favicon.png?v=2">
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0XJM4EP2XP"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-446Y45EWPD"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-        gtag('config', 'G-0XJM4EP2XP');
+        gtag('config', 'G-446Y45EWPD');
     </script>
 
     <style>
@@ -1376,7 +1376,9 @@ function createDetailsRow(server) {
         <p class="detail-server-name">
             <strong>Servername:</strong>
             <span class="detail-server-name-value">${escapeHtml(server.name || "Unknown Server")}</span>
-        </p>
+           
+        <p><strong>Connect:</strong> ${escapeHtml(address)}
+        <button class="copy-button" onclick="copyConnectCommand(event,'${escapeHtml(address)}')" title="Copy connection command">⧉</button></p>
         <p><strong>Game:</strong> ${escapeHtml(gameName)}</p>
         <p><strong>Players:</strong> ${players.current || 0} / ${players.max || 0}</p>
         <p><strong>Map:</strong> ${escapeHtml(server.map?.display || server.map?.raw || "Unknown")}</p>
