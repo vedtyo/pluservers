@@ -532,6 +532,63 @@
             border-color: rgba(75,156,92,.35);
         }
 
+        /* Pagination Styles */
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e3e7;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 13px;
+            color: #6d747d;
+        }
+
+        .pagination-info {
+            font-weight: 500;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-button {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            border: 1px solid #cbd0d6;
+            background: #fff;
+            color: #33373d;
+            cursor: pointer;
+            transition: background .15s ease, border-color .15s ease;
+        }
+
+        .pagination-button:hover:not(:disabled) {
+            background: #f0f2f4;
+            border-color: #aeb5bd;
+        }
+
+        .pagination-button.active {
+            background: #e7eaee;
+            border-color: #8f97a1;
+            font-weight: bold;
+        }
+
+        .pagination-button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .pagination-ellipsis {
+            padding: 0 4px;
+            color: #8c939e;
+        }
+
         /* Dark Mode */
         body.dark-mode {
             background: var(--bg);
@@ -677,6 +734,27 @@
         body.dark-mode .player-medium { color:#57c96b; border-color:rgba(87,201,107,.43); background:rgba(87,201,107,.06); }
         body.dark-mode .player-full { color:#f06a6a; border-color:rgba(240,106,106,.48); background:rgba(240,106,106,.06); }
 
+        body.dark-mode .pagination-container {
+            background: #0f1217;
+            border-top-color: var(--border);
+            color: #858d98;
+        }
+
+        body.dark-mode .pagination-button {
+            background: var(--surface);
+            color: #c7ccd3;
+            border-color: var(--border);
+        }
+
+        body.dark-mode .pagination-button:hover:not(:disabled) {
+            background: var(--surface-hover);
+        }
+
+        body.dark-mode .pagination-button.active {
+            background: #1b2028;
+            border-color: #515a66;
+        }
+
         /* Mobile */
         @media (max-width: 600px) {
             body { padding: 10px; }
@@ -716,6 +794,21 @@
             th.game-column, td.game-name { width: 10%; min-width: 86px; overflow: visible; text-overflow: clip; white-space: nowrap; }
             th.map-column, td.map-cell { width: 15%; padding-left: 32px; }
             th.mode-column, td.mode-cell { width: 12%; }
+
+            .pagination-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 8px;
+                padding: 10px;
+            }
+            .pagination-buttons {
+                justify-content: center;
+            }
+            .pagination-button {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
         }
 
         #darkModeButton {
@@ -805,6 +898,8 @@ let expandedServerId = null;
 let selectedGame = "ALL";
 let hasLoadedServers = false;
 let activeLoadRequest = 0;
+let currentPage = 1;
+const itemsPerPage = 50;
 
 const urlParams = new URLSearchParams(window.location.search);
 let searchQuery = (urlParams.get("q") || "").trim().toLowerCase();
@@ -1017,55 +1112,57 @@ function getShortGameName(gameId) {
     return names[gameId] || gameId;
 }
 
-const GAME_PATHS = {
-    "T6": "#BO2-MP", "T6ZM": "#BO2-ZM", "IW5": "#MW3-MP",
-    "T5": "#BO1-MP", "T5ZM": "#BO1-ZM", "T4": "#WaW-MP", "T4ZM": "#WaW-ZM"
-};
-
-function selectGame(gameId) {
-    selectedGame = gameId || "ALL";
-    expandedServerId = null;
-
-    renderGameButtons();
-    renderServers();
-
-    const targetHash = (selectedGame !== "ALL" && GAME_PATHS[selectedGame]) ? GAME_PATHS[selectedGame] : "";
-    const currentHash = window.location.hash;
-
-    if (currentHash !== targetHash) {
-        const newUrl = window.location.pathname + window.location.search + targetHash;
-        window.history.pushState(
-            { game: selectedGame },
-            "",
-            newUrl
-        );
-    }
-}
-
-function getGameFromCurrentUrl() {
-    const currentHash = window.location.hash.toLowerCase();
-    if (currentHash) {
-        const hashMatch = Object.entries(GAME_PATHS).find(
-            ([, gamePath]) => gamePath.toLowerCase() === currentHash || ("/" + gamePath.toLowerCase()) === currentHash
-        );
-        if (hashMatch) return hashMatch[0];
-    }
-    const currentPath = window.location.pathname.replace(/\/+$/, "").toLowerCase() || "/";
-    const pathMatch = Object.entries(GAME_PATHS).find(
-        ([, gamePath]) => gamePath.replace(/^#/, "/").toLowerCase() === currentPath
-    );
-    return pathMatch ? pathMatch[0] : "ALL";
-}
-
-function handleUrlChange() {
-    selectedGame = getGameFromCurrentUrl();
-    expandedServerId = null;
-    renderGameButtons();
-    renderServers();
-}
-
-window.addEventListener("popstate", handleUrlChange);
-window.addEventListener("hashchange", handleUrlChange);
+const GAME_PATHS = { 
+    "T6": "#BO2-MP", "T6ZM": "#BO2-ZM", "IW5": "#MW3-MP", 
+    "T5": "#BO1-MP", "T5ZM": "#BO1-ZM", "T4": "#WaW-MP", "T4ZM": "#WaW-ZM" 
+}; 
+ 
+function selectGame(gameId) { 
+    selectedGame = gameId || "ALL"; 
+    expandedServerId = null; 
+    currentPage = 1;
+ 
+    renderGameButtons(); 
+    renderServers(); 
+ 
+    const targetHash = (selectedGame !== "ALL" && GAME_PATHS[selectedGame]) ? GAME_PATHS[selectedGame] : ""; 
+    const currentHash = window.location.hash; 
+ 
+    if (currentHash !== targetHash) { 
+        const newUrl = window.location.pathname + window.location.search + targetHash; 
+        window.history.pushState( 
+            { game: selectedGame }, 
+            "", 
+            newUrl 
+        ); 
+    } 
+} 
+ 
+function getGameFromCurrentUrl() { 
+    const currentHash = window.location.hash.toLowerCase(); 
+    if (currentHash) { 
+        const hashMatch = Object.entries(GAME_PATHS).find( 
+            ([, gamePath]) => gamePath.toLowerCase() === currentHash || ("/" + gamePath.toLowerCase()) === currentHash 
+        ); 
+        if (hashMatch) return hashMatch[0]; 
+    } 
+    const currentPath = window.location.pathname.replace(/\/+$/, "").toLowerCase() || "/"; 
+    const pathMatch = Object.entries(GAME_PATHS).find( 
+        ([, gamePath]) => gamePath.replace(/^#/, "/").toLowerCase() === currentPath 
+    ); 
+    return pathMatch ? pathMatch[0] : "ALL"; 
+} 
+ 
+function handleUrlChange() { 
+    selectedGame = getGameFromCurrentUrl(); 
+    expandedServerId = null; 
+    currentPage = 1;
+    renderGameButtons(); 
+    renderServers(); 
+} 
+ 
+window.addEventListener("popstate", handleUrlChange); 
+window.addEventListener("hashchange", handleUrlChange); 
 
 /* =========================
    RENDER SERVIDORES
@@ -1167,7 +1264,21 @@ function renderGame(gameId, game, container) {
     const tbody = document.createElement("tbody");
     const sortedServers = [...game.servers].sort(sortServers);
 
-    sortedServers.forEach(server => {
+    const totalServers = sortedServers.length;
+    const totalPages = Math.ceil(totalServers / itemsPerPage) || 1;
+
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+    if (currentPage < 1) {
+        currentPage = 1;
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, totalServers);
+    const paginatedServers = sortedServers.slice(startIndex, endIndex);
+
+    paginatedServers.forEach(server => {
         if (!server) return;
 
         const serverId = server.id || server.address || (server.ip && server.port ? `${server.ip}:${server.port}` : getServerKey(server));
@@ -1219,7 +1330,94 @@ function renderGame(gameId, game, container) {
     table.appendChild(tbody);
     tableContainer.appendChild(table);
     gameElement.appendChild(tableContainer);
+
+    if (totalServers > 0) {
+        const paginationContainer = document.createElement("div");
+        paginationContainer.className = "pagination-container";
+
+        const paginationInfo = document.createElement("div");
+        paginationInfo.className = "pagination-info";
+        paginationInfo.textContent = `Showing ${startIndex + 1}-${endIndex} of ${totalServers} servers`;
+
+        const paginationButtons = document.createElement("div");
+        paginationButtons.className = "pagination-buttons";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.className = "pagination-button";
+        prevBtn.textContent = "« Previous";
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => goToPage(currentPage - 1);
+        paginationButtons.appendChild(prevBtn);
+
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage + 1 < maxPagesToShow) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        if (startPage > 1) {
+            const firstBtn = document.createElement("button");
+            firstBtn.className = "pagination-button";
+            firstBtn.textContent = "1";
+            firstBtn.onclick = () => goToPage(1);
+            paginationButtons.appendChild(firstBtn);
+
+            if (startPage > 2) {
+                const ellipsis = document.createElement("span");
+                ellipsis.className = "pagination-ellipsis";
+                ellipsis.textContent = "…";
+                paginationButtons.appendChild(ellipsis);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement("button");
+            pageBtn.className = "pagination-button" + (i === currentPage ? " active" : "");
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => goToPage(i);
+            paginationButtons.appendChild(pageBtn);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                const ellipsis = document.createElement("span");
+                ellipsis.className = "pagination-ellipsis";
+                ellipsis.textContent = "…";
+                paginationButtons.appendChild(ellipsis);
+            }
+
+            const lastBtn = document.createElement("button");
+            lastBtn.className = "pagination-button";
+            lastBtn.textContent = totalPages;
+            lastBtn.onclick = () => goToPage(totalPages);
+            paginationButtons.appendChild(lastBtn);
+        }
+
+        const nextBtn = document.createElement("button");
+        nextBtn.className = "pagination-button";
+        nextBtn.textContent = "Next »";
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => goToPage(currentPage + 1);
+        paginationButtons.appendChild(nextBtn);
+
+        paginationContainer.appendChild(paginationInfo);
+        paginationContainer.appendChild(paginationButtons);
+        gameElement.appendChild(paginationContainer);
+    }
+
     container.appendChild(gameElement);
+}
+
+function goToPage(page) {
+    currentPage = page;
+    expandedServerId = null;
+    renderServers();
+    const serversEl = document.getElementById("servers");
+    if (serversEl) {
+        serversEl.scrollIntoView({ behavior: "smooth" });
+    }
 }
 
 function getCountryFlag(countryCode) {
@@ -1287,36 +1485,42 @@ function sortServers(a, b) {
 function sortByCountry() {
     if (currentSort === "country") { sortDescending = !sortDescending; }
     else { currentSort = "country"; sortDescending = false; }
+    currentPage = 1;
     renderServers();
 }
 
 function sortByPlayers() {
     if (currentSort === "players") { sortDescending = !sortDescending; }
     else { currentSort = "players"; sortDescending = true; }
+    currentPage = 1;
     renderServers();
 }
 
 function sortByServer() {
     if (currentSort === "server") { sortDescending = !sortDescending; }
     else { currentSort = "server"; sortDescending = false; }
+    currentPage = 1;
     renderServers();
 }
 
 function sortByGame() {
     if (currentSort === "game") { sortDescending = !sortDescending; }
     else { currentSort = "game"; sortDescending = false; }
+    currentPage = 1;
     renderServers();
 }
 
 function sortByMap() {
     if (currentSort === "map") { sortDescending = !sortDescending; }
     else { currentSort = "map"; sortDescending = false; }
+    currentPage = 1;
     renderServers();
 }
 
 function sortByMode() {
     if (currentSort === "mode") { sortDescending = !sortDescending; }
     else { currentSort = "mode"; sortDescending = false; }
+    currentPage = 1;
     renderServers();
 }
 
@@ -1337,6 +1541,7 @@ function searchServers() {
 
     window.history.pushState({}, "", url);
     expandedServerId = null;
+    currentPage = 1;
     renderServers();
 }
 
@@ -1350,6 +1555,7 @@ function clearSearch() {
 
     window.history.pushState({}, "", url);
     expandedServerId = null;
+    currentPage = 1;
     renderServers();
 }
 
@@ -1376,9 +1582,8 @@ function createDetailsRow(server) {
         <p class="detail-server-name">
             <strong>Servername:</strong>
             <span class="detail-server-name-value">${escapeHtml(server.name || "Unknown Server")}</span>
-           
-        <p><strong>Connect:</strong> ${escapeHtml(address)}
-        <button class="copy-button" onclick="copyConnectCommand(event,'${escapeHtml(address)}')" title="Copy connection command">⧉</button></p>
+        </p>
+        <p><strong>Connect:</strong> ${escapeHtml(address)} ${address ? `<button class="copy-button" onclick="copyConnectCommand(event, '${escapeHtml(address)}')">⧉</button>` : ""}</p>
         <p><strong>Game:</strong> ${escapeHtml(gameName)}</p>
         <p><strong>Players:</strong> ${players.current || 0} / ${players.max || 0}</p>
         <p><strong>Map:</strong> ${escapeHtml(server.map?.display || server.map?.raw || "Unknown")}</p>
